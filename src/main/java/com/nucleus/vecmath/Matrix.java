@@ -39,7 +39,12 @@ public abstract class Matrix extends VecMath {
     public final static int TRANSLATE_Z = 14;
     public final static int TRANSLATE_W = 15;
 
-    public final static float[] matrix = new float[16];
+    /**
+     * Number of elements (values) in a matrix
+     */
+    public final static int MATRIX_ELEMENTS = 16;
+
+    public final static float[] matrix = new float[MATRIX_ELEMENTS];
 
     /**
      * Returns a matrix with the values contained in the implementing class.
@@ -47,6 +52,15 @@ public abstract class Matrix extends VecMath {
      * @return Matrix with the data contained in the implementing class
      */
     public abstract float[] getMatrix();
+
+    /**
+     * Creates a new, empty, matrix
+     * 
+     * @return
+     */
+    public final static float[] createMatrix() {
+        return new float[MATRIX_ELEMENTS];
+    }
 
     /**
      * Sets the matrix to identity.
