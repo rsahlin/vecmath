@@ -27,12 +27,19 @@ public final class Vector2D extends VecMath {
 
     /**
      * Sets x and y as normalized direction and magnitude.
+     * If length is 0 then magnitude is set to 0
      * 
      * @param x Size of vector x axis
      * @param y Size of vector y axis
      */
     public void setNormalized(float x, float y) {
         float length = length(x, y);
+        if (length == 0) {
+            vector[X] = x;
+            vector[Y] = y;
+            vector[MAGNITUDE] = 0;
+            return;
+        }
         vector[X] = x / length;
         vector[Y] = y / length;
         vector[MAGNITUDE] = length;
@@ -111,5 +118,4 @@ public final class Vector2D extends VecMath {
             vector[Y] = min;
         }
     }
-
 }
