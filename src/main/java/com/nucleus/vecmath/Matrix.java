@@ -47,7 +47,7 @@ public abstract class Matrix extends VecMath {
     public final static float[] matrix = new float[MATRIX_ELEMENTS];
 
     /**
-     * Returns a matrix with the values contained in the implementing class.
+     * Returns a matrix with the values contained in the implementing class, ie the rotate, translate and scale values.
      * 
      * @return Matrix with the data contained in the implementing class
      */
@@ -176,8 +176,8 @@ public abstract class Matrix extends VecMath {
     /**
      * Concatenate matrix with matrix2 and store the result in matrix.
      * 
-     * @param matrix
-     * @param matrix2
+     * @param matrix Source 1 matrix - matrix1 * matrix2 stored here
+     * @param matrix2 Source 2 matrix
      */
     public static void mul4(float[] matrix, float[] matrix2) {
         float temp_float1, temp_float2, temp_float3, temp_float4;
@@ -217,7 +217,7 @@ public abstract class Matrix extends VecMath {
                 matrix[11] * matrix2[14]);
         temp_float4 = (matrix[8] * matrix2[3] + matrix[9] * matrix2[7] + matrix[10] * matrix2[11] +
                 matrix[11] * matrix2[15]);
-        matrix[0] = temp_float1;
+        matrix[8] = temp_float1;
         matrix[9] = temp_float2;
         matrix[10] = temp_float3;
         matrix[11] = temp_float4;
