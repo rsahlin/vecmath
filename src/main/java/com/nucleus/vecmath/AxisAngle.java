@@ -1,8 +1,11 @@
 package com.nucleus.vecmath;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Axis angle representation of x,y and z axis rotation.
  * This is based on the Collada way of representing rotations.
+ * This class may be serialized using GSON
  * 
  * @author Richard Sahlin
  *
@@ -12,8 +15,9 @@ public final class AxisAngle extends VecMath {
     /**
      * Index to the angle, angle value is stored in degrees (same as Collada)
      */
-    public final static int ANGLE = 4;
+    public final static int ANGLE = 3;
 
+    @SerializedName("values")
     final float[] axisAngle = new float[4];
 
     /**
@@ -22,7 +26,7 @@ public final class AxisAngle extends VecMath {
      * 
      * @return Array with x,y,z axis + angle.
      */
-    public float[] getAxisAngle() {
+    public float[] getValues() {
         return axisAngle;
     }
 
@@ -34,7 +38,7 @@ public final class AxisAngle extends VecMath {
      * @param z Z axis component.
      * @param angle Angle value, in degrees
      */
-    public void setAxisAngle(float x, float y, float z, float angle) {
+    public void setValues(float x, float y, float z, float angle) {
         axisAngle[X] = x;
         axisAngle[Y] = y;
         axisAngle[Z] = z;
