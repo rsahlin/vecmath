@@ -21,6 +21,34 @@ public final class Transform extends Matrix {
     final float[] translate = new float[3];
 
     /**
+     * Default constructor
+     */
+    public Transform() {
+        super();
+    }
+
+    /**
+     * Creates a new instance from the specified transform.
+     * All values in the source transform will be copied into this class
+     * 
+     * @param source
+     */
+    public Transform(Transform source) {
+        set(source);
+    }
+
+    /**
+     * Copies all transform values from the source into this class.
+     * 
+     * @param source
+     */
+    public void set(Transform source) {
+        setScale(source.getScale());
+        setTranslate(source.getTranslate());
+        axisAngle.setValues(source.getAxisAngle().getValues());
+    }
+
+    /**
      * Returns the translation for this transform.
      * The returned array will be a reference to the translate in this class.
      * 
@@ -28,6 +56,17 @@ public final class Transform extends Matrix {
      */
     public float[] getTranslate() {
         return translate;
+    }
+
+    /**
+     * Copies the translate values into this transform
+     * 
+     * @param translate Array with at least 3 values
+     */
+    public void setTranslate(float[] translate) {
+        this.translate[X] = translate[X];
+        this.translate[Y] = translate[Y];
+        this.translate[Z] = translate[Z];
     }
 
     /**
@@ -51,6 +90,17 @@ public final class Transform extends Matrix {
         scale[X] = x;
         scale[Y] = y;
         scale[Z] = z;
+    }
+
+    /**
+     * Sets the scale values in this transform from the specified array.
+     * 
+     * @param scale Array with at least 3 values
+     */
+    public void setScale(float[] scale) {
+        this.scale[X] = scale[X];
+        this.scale[Y] = scale[Y];
+        this.scale[Z] = scale[Z];
     }
 
     /**

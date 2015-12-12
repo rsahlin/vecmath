@@ -21,6 +21,22 @@ public final class AxisAngle extends VecMath {
     final float[] axisAngle = new float[4];
 
     /**
+     * Default constructor
+     */
+    public AxisAngle() {
+        super();
+    }
+
+    /**
+     * Creates a copy of the specified axis angle, all values are copied.
+     * 
+     * @param source
+     */
+    public AxisAngle(AxisAngle source) {
+        setValues(source.getValues());
+    }
+
+    /**
      * Returns a reference to the array containing axis/angle values.
      * Index X,Y and Z is used for x axis and the ANGLE index contains the angle value.
      * 
@@ -43,6 +59,19 @@ public final class AxisAngle extends VecMath {
         axisAngle[Y] = y;
         axisAngle[Z] = z;
         axisAngle[ANGLE] = angle;
+    }
+
+    /**
+     * Sets the x,y,z and angle values
+     * 
+     * @param values Array with X,Y,Z and ANGLE values
+     */
+    public void setValues(float[] values) {
+        axisAngle[X] = values[X];
+        axisAngle[Y] = values[Y];
+        axisAngle[Z] = values[Z];
+        axisAngle[ANGLE] = values[ANGLE];
+
     }
 
 }
