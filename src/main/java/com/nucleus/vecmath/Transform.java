@@ -20,6 +20,9 @@ public final class Transform extends Matrix {
     @SerializedName("translate")
     final float[] translate = new float[3];
 
+    @SerializedName("scaleLimit")
+    private Limiter scaleLimit;
+
     /**
      * Default constructor
      */
@@ -46,6 +49,9 @@ public final class Transform extends Matrix {
         setScale(source.getScale());
         setTranslate(source.getTranslate());
         axisAngle.setValues(source.getAxisAngle().getValues());
+        if (source.scaleLimit != null) {
+            this.scaleLimit = new Limiter(source.scaleLimit);
+        }
     }
 
     /**
@@ -80,6 +86,17 @@ public final class Transform extends Matrix {
     }
 
     /**
+     * Checks if the limiter is set (not null), if so the values are checked to be in limit
+     * 
+     * @param values
+     */
+    private void limit(float[] values, Limiter limiter) {
+        if (limiter != null) {
+            limiter.limit(this.scale);
+        }
+    }
+
+    /**
      * Sets the x,y and z axis scale
      * 
      * @param x
@@ -90,10 +107,26 @@ public final class Transform extends Matrix {
         scale[X] = x;
         scale[Y] = y;
         scale[Z] = z;
+        limit(scale, scaleLimit);
+    }
+
+    /**
+     * Multiplies the scalar factor with the scale values and adds to the current scale,
+     * this can be used to uniformly modify the scale values.
+     * Positive values will increase scale, negative values will decrease scale.
+     * 
+     * @param factor Scalefactor
+     */
+    public void scale(float factor) {
+        scale[X] += factor * scale[X];
+        scale[Y] += factor * scale[Y];
+        scale[Z] += factor * scale[Z];
+        limit(scale, scaleLimit);
     }
 
     /**
      * Sets the scale values in this transform from the specified array.
+     * If the scale limit values are set then scale values are checked to be in range.
      * 
      * @param scale Array with at least 3 values
      */
@@ -101,6 +134,7 @@ public final class Transform extends Matrix {
         this.scale[X] = scale[X];
         this.scale[Y] = scale[Y];
         this.scale[Z] = scale[Z];
+        limit(scale, scaleLimit);
     }
 
     /**
