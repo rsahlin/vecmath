@@ -118,4 +118,77 @@ public final class Vector2D extends VecMath {
             vector[Y] = min;
         }
     }
+
+    /**
+     * Calculates the dot product between two 2 dimensional vectors.
+     * 
+     * @param v1
+     * @param v2
+     * @return The dot product
+     */
+    public static final float dot2D(float[] v1, float[] v2) {
+        return v1[X] * v2[X]
+                + v1[Y] * v2[Y];
+    }
+
+    /**
+     * Rotates a 2 dimensional vector along the z axis.
+     * 
+     * @paran source The source vector
+     * @param destination The destination vector
+     * @param angle
+     */
+    public static final void rotateZAxis(float[] source, float[] destination, float angle) {
+        float sin = (float) Math.sin(angle);
+        float cos = (float) Math.cos(angle);
+        destination[1] = (source[0] * sin) + (source[1] * cos);
+        destination[0] = (source[0] * cos) - (source[1] * sin);
+    }
+
+    /**
+     * Rotates a 2 dimensional vector along the z axis.
+     * 
+     * @paran source The source vector
+     * @param sourceindex Index into the source array where the 2 vector values are
+     * @param destination The destination vector
+     * @param destindex Index into the destination array where the 2 vector values shall be stored
+     * @param angle
+     */
+    public static final void rotateZAxis(float[] source, int sourceindex, float[] destination, int destindex,
+            float angle) {
+        float sin = (float) Math.sin(angle);
+        float cos = (float) Math.cos(angle);
+        destination[destindex++] = (source[sourceindex] * cos) - (source[sourceindex + 1] * sin);
+        destination[destindex] = (source[sourceindex] * sin) + (source[sourceindex + 1] * cos);
+
+    }
+
+    /**
+     * Calculate the length of the Vector. To get the normalized unit length
+     * call normalize()
+     * Note that no error checking is done, the source array must contain 2 values at index.
+     * 
+     * @param vector Array with vector values
+     * @param index Index into array where vector starts.
+     * @return The length of the vector
+     */
+    public final static float length(float[] vector, int index) {
+        return (float) Math
+                .sqrt((vector[X + index] * vector[X + index])
+                        + (vector[Y + index] * vector[Y + index]));
+
+    }
+
+    /**
+     * Sets the destination vector, going from vector2 to vector1
+     * 
+     * @param vector1
+     * @param vector2
+     * @param destination vector1 - vector2
+     */
+    public final static void set(float[] vector1, float[] vector2, float[] destination) {
+        destination[0] = vector1[0] - vector2[0];
+        destination[1] = vector1[1] - vector2[1];
+    }
+
 }
