@@ -65,9 +65,11 @@ public abstract class Matrix extends VecMath {
     /**
      * Sets the matrix to identity.
      * 
+     * @param matrix The matrix
      * @offset Offset into array where matrix values are stored.
+     * @return The matrix, this is the same as passed into this method
      */
-    public final static void setIdentity(float[] matrix, int offset) {
+    public final static float[] setIdentity(float[] matrix, int offset) {
         matrix[offset++] = 1f;
         matrix[offset++] = 0f;
         matrix[offset++] = 0f;
@@ -87,6 +89,7 @@ public abstract class Matrix extends VecMath {
         matrix[offset++] = 0f;
         matrix[offset++] = 0f;
         matrix[offset++] = 1f;
+        return matrix;
     }
 
     /**
@@ -108,18 +111,38 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Multiply a 3 vector with a matrix
+     * Multiply a 3 element vector with a matrix, the resultvector will be transformed using the matrix.
      * 
-     * @param resultVec
-     * @param matrix
-     * @param vec
+     * @param matrix The transform matrix
+     * @param vec The vector to transform.
+     * @param resultVec The output vector, this is where the result is stored. May not be the same as vec
      */
-    public final static void mulVector3(float[] resultVec, float[] matrix, float[] vec) {
-
+    public final static void transformVec3(float[] matrix, float[] vec, float[] resultVec) {
         resultVec[0] = matrix[0] * vec[0] + matrix[4] * vec[1] + matrix[8] * vec[2] + matrix[12];
         resultVec[1] = matrix[1] * vec[0] + matrix[5] * vec[1] + matrix[9] * vec[2] + matrix[13];
         resultVec[2] = matrix[2] * vec[0] + matrix[6] * vec[1] + matrix[10] * vec[2] + matrix[14];
+    }
 
+    /**
+     * Multiply a number of 2 element vector with a matrix, the resultvectors will be transformed using the matrix
+     * and stored sequentially
+     * 
+     * @param matrix
+     * @param offset Offset in matrix array where matrix starts
+     * @param vec
+     * @param resultVec The output vector, this may not be the same as vec
+     * @param count Number of vectors to transform
+     */
+    public final static void transformVec2(float[] matrix, int offset, float[] vec, float[] resultVec, float count) {
+        int output = 0;
+        int input = 0;
+        for (int i = 0; i < count; i++) {
+            resultVec[output++] = matrix[offset] * vec[input] + matrix[offset + 4] * vec[input + 1]
+                    + matrix[offset + 12];
+            resultVec[output++] = matrix[offset + 1] * vec[input] + matrix[offset + 5] * vec[input + 1]
+                    + matrix[offset + 13];
+            input += 2;
+        }
     }
 
     /**
