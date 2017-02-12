@@ -197,7 +197,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Concatenate matrix with matrix2 and store the result in matrix.
+     * Concatenate matrix with matrix2 and store the result in matrix
      * 
      * @param matrix Source 1 matrix - matrix1 * matrix2 stored here
      * @param matrix2 Source 2 matrix

@@ -87,6 +87,16 @@ public final class Transform extends Matrix {
     }
 
     /**
+     * Adds the specified translation in x and y
+     * @param x
+     * @param y
+     */
+    public void translate(float x, float y) {
+        translate[X] += x;
+        translate[Y] += y;
+    }
+    
+    /**
      * Returns the z,y, z axis scale
      * The returned array will be a reference to the scale in this class.
      * 
