@@ -25,7 +25,6 @@ bin/
 hs_err_pid*
 /bin/
 /target/
-*.project
 *.classpath
 /.settings/
 
