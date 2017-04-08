@@ -11,6 +11,8 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Rectangle {
 
+    public static final String RECT = "rect";
+
     public final static int X = 0;
     public final static int Y = 1;
     public final static int WIDTH = 2;
