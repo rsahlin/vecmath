@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
 public class Rectangle {
 
     public static final String RECT = "rect";
+    public static final String VALUES = "values";
 
     public final static int X = 0;
     public final static int Y = 1;
@@ -22,11 +23,42 @@ public class Rectangle {
         /**
          * Defined using position + size,
          */
-        SIZE();
+        SIZE(4);
+
+        int values;
+
+        Mode(int values) {
+            this.values = values;
+        }
     }
 
-    @SerializedName("values")
+    @SerializedName(VALUES)
     private float[] values;
+
+    /**
+     * Creates a new rectangle with position and size
+     * 
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    public Rectangle(float x, float y, float width, float height) {
+        values = new float[Mode.SIZE.values];
+        values[X] = x;
+        values[Y] = y;
+        values[WIDTH] = width;
+        values[HEIGHT] = height;
+
+    }
+
+    /**
+     * Creates a new empty rectangle
+     * 
+     */
+    public Rectangle() {
+        values = new float[Mode.SIZE.values];
+    }
 
     public Rectangle(Rectangle source) {
         setValues(source.values);
