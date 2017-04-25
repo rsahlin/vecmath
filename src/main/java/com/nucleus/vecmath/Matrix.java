@@ -1,6 +1,7 @@
 package com.nucleus.vecmath;
 
 /**
+ * This class is NOT thread safe since it uses static temp float arrays
  * 4 x 4 matrix laid out contiguously in memory, translation component is at the 13th, 14th, and 15th element,
  * ie column major. See OpenGL Specification or Android implementation of Matrix.java
  * Use this for classes that can represent the data as a matrix, for instance a scale or translation
@@ -45,6 +46,9 @@ public abstract class Matrix extends VecMath {
     public final static int MATRIX_ELEMENTS = 16;
 
     public final static float[] matrix = new float[MATRIX_ELEMENTS];
+
+    private static float[] temp = new float[16];
+    private static float[] result = new float[16];
 
     /**
      * Returns a matrix with the values contained in the implementing class, ie the rotate, translate and scale values.
@@ -137,9 +141,9 @@ public abstract class Matrix extends VecMath {
         int output = 0;
         int input = 0;
         for (int i = 0; i < count; i++) {
-            resultVec[output++] = matrix[offset] * vec[input] + matrix[offset + 4] * vec[input + 1]
+            resultVec[output++] = matrix[offset] * vec[input] + matrix[offset + 1] * vec[input + 1]
                     + matrix[offset + 12];
-            resultVec[output++] = matrix[offset + 1] * vec[input] + matrix[offset + 5] * vec[input + 1]
+            resultVec[output++] = matrix[offset + 4] * vec[input] + matrix[offset + 5] * vec[input + 1]
                     + matrix[offset + 13];
             input += 2;
         }
@@ -629,9 +633,8 @@ public abstract class Matrix extends VecMath {
      */
     public static void rotateM(float[] rm,
             float[] m, float a, float x, float y, float z) {
-        float[] r = new float[16];
-        setRotateM(r, 0, a, x, y, z);
-        mul4(m, r, rm);
+        setRotateM(temp, 0, a, x, y, z);
+        mul4(m, temp, rm);
     }
 
     /**
@@ -647,11 +650,18 @@ public abstract class Matrix extends VecMath {
      */
     public static void rotateM(float[] m, int mOffset,
             float a, float x, float y, float z) {
-        float[] temp = new float[16];
-        float[] result = new float[16];
         setRotateM(temp, 0, a, x, y, z);
         mul4(m, temp, result);
         System.arraycopy(result, 0, m, mOffset, 16);
+    }
+
+    public static void rotateM(float[] m, AxisAngle axisAngle) {
+        if (axisAngle != null) {
+            float[] values = axisAngle.axisAngle;
+            setRotateM(temp, 0, values[AxisAngle.ANGLE], values[AxisAngle.X], values[AxisAngle.Y], values[AxisAngle.Z]);
+            mul4(m, temp, result);
+            System.arraycopy(result, 0, m, 0, 16);
+        }
     }
 
     /**
@@ -659,7 +669,7 @@ public abstract class Matrix extends VecMath {
      * 
      * @param rm returns the result
      * @param rmOffset index into rm where the result matrix starts
-     * @param a angle to rotate in degrees
+     * @param a angle to rotate in radians
      * @param x scale factor x
      * @param y scale factor y
      * @param z scale factor z
@@ -673,7 +683,6 @@ public abstract class Matrix extends VecMath {
         rm[rmOffset + 13] = 0;
         rm[rmOffset + 14] = 0;
         rm[rmOffset + 15] = 1;
-        a *= (float) (Math.PI / 180.0f);
         float s = (float) Math.sin(a);
         float c = (float) Math.cos(a);
         if (1.0f == x && 0.0f == y && 0.0f == z) {
