@@ -137,7 +137,7 @@ public abstract class Matrix extends VecMath {
      * @param resultVec The output vector, this may not be the same as vec
      * @param count Number of vectors to transform
      */
-    public final static void transformVec2(float[] matrix, int offset, float[] vec, float[] resultVec, float count) {
+    public final static void transformVec2(float[] matrix, int offset, float[] vec, float[] resultVec, int count) {
         int output = 0;
         int input = 0;
         for (int i = 0; i < count; i++) {
