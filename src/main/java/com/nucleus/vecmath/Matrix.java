@@ -45,7 +45,16 @@ public abstract class Matrix extends VecMath {
      */
     public final static int MATRIX_ELEMENTS = 16;
 
-    public final static float[] matrix = new float[MATRIX_ELEMENTS];
+    /**
+     * Identity matrix to be used to read from
+     * DO NOT WRITE TO THIS MATRIX
+     */
+    public final static float[] IDENTITY_MATRIX = Matrix.setIdentity(Matrix.createMatrix(), 0);
+
+    /**
+     * Used to store the transform
+     */
+    transient protected float[] matrix = Matrix.createMatrix();
 
     private static float[] temp = new float[16];
     private static float[] result = new float[16];
