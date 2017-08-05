@@ -92,4 +92,9 @@ public class Rectangle {
         System.arraycopy(values, 0, this.values, 0, values.length);
     }
 
+    @Override
+    public String toString() {
+        return "X:" + values[X] + " y:" + values[Y] + " width:" + values[WIDTH] + " height:" + values[HEIGHT];
+    }
+
 }
