@@ -64,6 +64,11 @@ public class Rectangle {
         setValues(source.values);
     }
 
+    /**
+     * Returns the array where values can be read by indexing {@link #X}, {@link #Y}, {@link #WIDTH} and {@link #HEIGHT}
+     * 
+     * @return
+     */
     public float[] getValues() {
         return values;
     }
@@ -78,6 +83,22 @@ public class Rectangle {
         size[0] = values[WIDTH];
         size[1] = values[HEIGHT];
         return size;
+    }
+
+    public float getWidth() {
+        return values[WIDTH];
+    }
+
+    public float getHeight() {
+        return values[HEIGHT];
+    }
+
+    public float getX() {
+        return values[X];
+    }
+
+    public float getY() {
+        return values[Y];
     }
 
     /**
