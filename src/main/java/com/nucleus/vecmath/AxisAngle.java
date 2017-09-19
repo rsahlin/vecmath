@@ -71,6 +71,9 @@ public final class AxisAngle extends VecMath {
         axisAngle[Y] = values[Y];
         axisAngle[Z] = values[Z];
         axisAngle[ANGLE] = values[ANGLE];
+        if (axisAngle[X] == 0 && axisAngle[Y] == 0 && axisAngle[Z] == 0) {
+        	throw new IllegalArgumentException("Invalid axis:" + axisAngle[X] + ", " + axisAngle[Y] + ", " + axisAngle[Z]);
+        }
 
     }
 

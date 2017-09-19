@@ -666,6 +666,7 @@ public abstract class Matrix extends VecMath {
 
     public static void rotateM(float[] m, AxisAngle axisAngle) {
         if (axisAngle != null) {
+        	//TODO - should a check be made for 0 values in X,Y,Z axis which results in NaN?
             float[] values = axisAngle.axisAngle;
             setRotateM(temp, 0, values[AxisAngle.ANGLE], values[AxisAngle.X], values[AxisAngle.Y], values[AxisAngle.Z]);
             mul4(m, temp, result);
