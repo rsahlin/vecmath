@@ -2,9 +2,9 @@ version: 2
 jobs:
    build:
      docker:
+       - image: circleci/openjdk:8-jdk-browsers
        - image: buildpack-deps:trusty
        - image: circleci/java:8
-       - image: maven/3.5.0-jdk-7
      steps:
        - checkout
        - run: echo "hello world"
