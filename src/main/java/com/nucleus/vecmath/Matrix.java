@@ -364,9 +364,8 @@ public abstract class Matrix extends VecMath {
         dst[15] -= tmp[8] * src[9] + tmp[11] * src[10] + tmp[5] * src[8];
 
         // calculate determinant
-        float det =
-                src[0] * dst[0] + src[1] * dst[1] + src[2] * dst[2] + src[3]
-                        * dst[3];
+        float det = src[0] * dst[0] + src[1] * dst[1] + src[2] * dst[2] + src[3]
+                * dst[3];
 
         if (det == 0.0f) {
 
@@ -382,6 +381,9 @@ public abstract class Matrix extends VecMath {
 
     /**
      * Computes an orthographic projection matrix.
+     * X axis increasing to the right
+     * Y axis increasing upwards
+     * Z axis increasing into the screen
      *
      * @param m returns the result
      * @param mOffset
@@ -413,7 +415,7 @@ public abstract class Matrix extends VecMath {
         final float z = -2.0f * (r_depth);
         final float tx = -(right + left) * r_width;
         final float ty = -(top + bottom) * r_height;
-        final float tz = -(far + near) * r_depth;
+        final float tz = (far + near) * r_depth;
         m[mOffset + 0] = x;
         m[mOffset + 5] = y;
         m[mOffset + 10] = z;
@@ -434,6 +436,9 @@ public abstract class Matrix extends VecMath {
 
     /**
      * Define a projection matrix in terms of six clip planes
+     * X axis increasing to the right
+     * Y axis increasing upwards
+     * Z axis increasing into the screen
      * 
      * @param m the float array that holds the perspective matrix
      * @param offset the offset into float array m where the perspective
@@ -471,7 +476,7 @@ public abstract class Matrix extends VecMath {
         final float y = 2.0f * (near * r_height);
         final float A = 2.0f * ((right + left) * r_width);
         final float B = (top + bottom) * r_height;
-        final float C = (far + near) * r_depth;
+        final float C = -(far + near) * r_depth;
         final float D = 2.0f * (far * near * r_depth);
         m[offset + 0] = x;
         m[offset + 5] = y;
@@ -479,7 +484,7 @@ public abstract class Matrix extends VecMath {
         m[offset + 9] = B;
         m[offset + 10] = C;
         m[offset + 14] = D;
-        m[offset + 11] = -1.0f;
+        m[offset + 11] = 1.0f;
         m[offset + 1] = 0.0f;
         m[offset + 2] = 0.0f;
         m[offset + 3] = 0.0f;
@@ -666,7 +671,7 @@ public abstract class Matrix extends VecMath {
 
     public static void rotateM(float[] m, AxisAngle axisAngle) {
         if (axisAngle != null) {
-        	//TODO - should a check be made for 0 values in X,Y,Z axis which results in NaN?
+            // TODO - should a check be made for 0 values in X,Y,Z axis which results in NaN?
             float[] values = axisAngle.axisAngle;
             setRotateM(temp, 0, values[AxisAngle.ANGLE], values[AxisAngle.X], values[AxisAngle.Y], values[AxisAngle.Z]);
             mul4(m, temp, result);
