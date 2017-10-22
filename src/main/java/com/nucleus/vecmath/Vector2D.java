@@ -16,13 +16,15 @@ public final class Vector2D extends VecMath {
     }
 
     /**
-     * Creates a 2D vector by normalizing the x and y value and storing the length as the 3'rd component.
+     * Creates a new 2 vector from p1 to p2
      * 
-     * @param x
-     * @param y
+     * @param p1
+     * @param p2
      */
-    public Vector2D(float x, float y) {
-        setNormalized(x, y);
+    public Vector2D(float[] p1, float[] p2) {
+        vector[X] = p2[X] - p1[X];
+        vector[Y] = p2[Y] - p1[Y];
+        vector[MAGNITUDE] = 1;
     }
 
     /**
@@ -43,6 +45,16 @@ public final class Vector2D extends VecMath {
         vector[X] = x / length;
         vector[Y] = y / length;
         vector[MAGNITUDE] = length;
+    }
+
+    /**
+     * Normalizes the vector, magnitude will be 1
+     */
+    public void normalize() {
+        float length = length(vector[X], vector[Y]);
+        vector[X] = vector[X] / length;
+        vector[Y] = vector[Y] / length;
+        vector[MAGNITUDE] = 1;
     }
 
     /**
@@ -191,4 +203,13 @@ public final class Vector2D extends VecMath {
         destination[1] = vector1[1] - vector2[1];
     }
 
+    /**
+     * Multiplies the magnitude by a scalar value, ie changing the velocity
+     * 
+     * @param scalar
+     */
+    public void mult(float scalar) {
+        vector[MAGNITUDE] = vector[MAGNITUDE] * scalar;
+    }
+    
 }
