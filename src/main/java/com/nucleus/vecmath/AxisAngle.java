@@ -12,12 +12,13 @@ import com.google.gson.annotations.SerializedName;
  */
 public final class AxisAngle extends VecMath {
 
+    public static final String VALUES = "values";
     /**
      * Index to the angle, angle value is stored in degrees (same as Collada)
      */
     public final static int ANGLE = 3;
 
-    @SerializedName("values")
+    @SerializedName(VALUES)
     final float[] axisAngle = new float[4];
 
     /**
