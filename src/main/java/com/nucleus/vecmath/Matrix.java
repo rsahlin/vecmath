@@ -412,10 +412,10 @@ public abstract class Matrix extends VecMath {
         final float r_depth = 1.0f / (far - near);
         final float x = 2.0f * (r_width);
         final float y = 2.0f * (r_height);
-        final float z = -2.0f * (r_depth);
+        final float z = 2.0f * (r_depth);
         final float tx = -(right + left) * r_width;
         final float ty = -(top + bottom) * r_height;
-        final float tz = (far + near) * r_depth;
+        final float tz = -(far + near) * r_depth;
         m[mOffset + 0] = x;
         m[mOffset + 5] = y;
         m[mOffset + 10] = z;
