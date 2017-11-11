@@ -11,16 +11,22 @@ import com.google.gson.annotations.SerializedName;
  */
 public final class Transform extends Matrix {
 
-    @SerializedName("axisAngle")
+    public static final String TRANSFORM = "transform";
+    public static final String AXIS_ANGLE = "axisAngle";
+    public static final String SCALE = "scale";
+    public static final String TRANSLATE = "translate";
+    public static final String SCALE_LIMIT = "scaleLimit";
+
+    @SerializedName(AXIS_ANGLE)
     AxisAngle axisAngle;
 
-    @SerializedName("scale")
+    @SerializedName(SCALE)
     float[] scale = new float[] { 1, 1, 1 };
 
-    @SerializedName("translate")
+    @SerializedName(TRANSLATE)
     float[] translate = new float[3];
 
-    @SerializedName("scaleLimit")
+    @SerializedName(SCALE_LIMIT)
     private Limiter scaleLimit;
 
     /**
