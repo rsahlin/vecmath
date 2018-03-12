@@ -610,7 +610,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Translate the matrix along the x,y and z axis.
+     * Translate the matrix, OpenGL row wise, along x,y and z axis
      * 
      * @param matrix
      * @param x
@@ -618,21 +618,21 @@ public abstract class Matrix extends VecMath {
      * @param z
      */
     public final static void translate(float[] matrix, float x, float y, float z) {
-        matrix[12] += x;
-        matrix[13] += y;
-        matrix[14] += z;
+        matrix[3] += x;
+        matrix[7] += y;
+        matrix[11] += z;
     }
 
     /**
-     * Translate the matrix along x,y and z axis
+     * Translate the matrix, OpenGL row wise, along x,y and z axis
      * 
      * @param matrix
      * @param translate
      */
     public final static void translate(float[] matrix, float[] translate) {
-        matrix[12] += translate[X];
-        matrix[13] += translate[Y];
-        matrix[14] += translate[Z];
+        matrix[3] += translate[X];
+        matrix[7] += translate[Y];
+        matrix[11] += translate[Z];
     }
 
     /**
