@@ -228,9 +228,9 @@ public abstract class Matrix extends VecMath {
         temp_float4 = (matrix[0] * matrix2[3] + matrix[1] * matrix2[7] + matrix[2] * matrix2[11] +
                 matrix[3] * matrix2[15]);
         matrix[0] = temp_float1;
-        matrix[1] = temp_float2;
-        matrix[2] = temp_float3;
-        matrix[3] = temp_float4;
+        matrix[4] = temp_float2;
+        matrix[8] = temp_float3;
+        matrix[12] = temp_float4;
 
         temp_float1 = (matrix[4] * matrix2[0] + matrix[5] * matrix2[4] + matrix[6] * matrix2[8] +
                 matrix[7] * matrix2[12]);
@@ -240,10 +240,10 @@ public abstract class Matrix extends VecMath {
                 matrix[7] * matrix2[14]);
         temp_float4 = (matrix[4] * matrix2[3] + matrix[5] * matrix2[7] + matrix[6] * matrix2[11] +
                 matrix[7] * matrix2[15]);
-        matrix[4] = temp_float1;
+        matrix[1] = temp_float1;
         matrix[5] = temp_float2;
-        matrix[6] = temp_float3;
-        matrix[7] = temp_float4;
+        matrix[9] = temp_float3;
+        matrix[13] = temp_float4;
 
         temp_float1 = (matrix[8] * matrix2[0] + matrix[9] * matrix2[4] + matrix[10] * matrix2[8] +
                 matrix[11] * matrix2[12]);
@@ -253,10 +253,10 @@ public abstract class Matrix extends VecMath {
                 matrix[11] * matrix2[14]);
         temp_float4 = (matrix[8] * matrix2[3] + matrix[9] * matrix2[7] + matrix[10] * matrix2[11] +
                 matrix[11] * matrix2[15]);
-        matrix[8] = temp_float1;
-        matrix[9] = temp_float2;
+        matrix[2] = temp_float1;
+        matrix[6] = temp_float2;
         matrix[10] = temp_float3;
-        matrix[11] = temp_float4;
+        matrix[14] = temp_float4;
 
         temp_float1 = (matrix[12] * matrix2[0] + matrix[13] * matrix2[4] + matrix[14] * matrix2[8] +
                 matrix[15] * matrix2[12]);
@@ -266,9 +266,9 @@ public abstract class Matrix extends VecMath {
                 + matrix[15] * matrix2[14]);
         temp_float4 = (matrix[12] * matrix2[3] + matrix[13] * matrix2[7] + matrix[14] * matrix2[11]
                 + matrix[15] * matrix2[15]);
-        matrix[12] = temp_float1;
-        matrix[13] = temp_float2;
-        matrix[14] = temp_float3;
+        matrix[3] = temp_float1;
+        matrix[7] = temp_float2;
+        matrix[11] = temp_float3;
         matrix[15] = temp_float4;
 
     }
@@ -605,7 +605,7 @@ public abstract class Matrix extends VecMath {
             float x, float y, float z) {
         for (int i = 0; i < 4; i++) {
             int mi = mOffset + i;
-            m[12 + mi] += m[mi] * x + m[4 + mi] * y + m[8 + mi] * z;
+            m[3 + mi] += m[mi] * x + m[1 + mi] * y + m[2 + mi] * z;
         }
     }
 
@@ -618,9 +618,7 @@ public abstract class Matrix extends VecMath {
      * @param z
      */
     public final static void translate(float[] matrix, float x, float y, float z) {
-        matrix[3] += x;
-        matrix[7] += y;
-        matrix[11] += z;
+        translateM(matrix, 0, x, y, z);
     }
 
     /**
@@ -630,9 +628,7 @@ public abstract class Matrix extends VecMath {
      * @param translate
      */
     public final static void translate(float[] matrix, float[] translate) {
-        matrix[3] += translate[X];
-        matrix[7] += translate[Y];
-        matrix[11] += translate[Z];
+        translateM(matrix, 0, translate[X], translate[Y], translate[Z]);
     }
 
     /**
