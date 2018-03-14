@@ -151,9 +151,9 @@ public abstract class Matrix extends VecMath {
         int input = 0;
         for (int i = 0; i < count; i++) {
             resultVec[output++] = matrix[offset] * vec[input] + matrix[offset + 1] * vec[input + 1]
-                    + matrix[offset + 12];
+                    + matrix[offset + 3];
             resultVec[output++] = matrix[offset + 4] * vec[input] + matrix[offset + 5] * vec[input + 1]
-                    + matrix[offset + 13];
+                    + matrix[offset + 7];
             input += 2;
         }
     }
@@ -618,7 +618,9 @@ public abstract class Matrix extends VecMath {
      * @param z
      */
     public final static void translate(float[] matrix, float x, float y, float z) {
-        translateM(matrix, 0, x, y, z);
+        matrix[3] = x;
+        matrix[7] = y;
+        matrix[11] = z;
     }
 
     /**
@@ -628,7 +630,9 @@ public abstract class Matrix extends VecMath {
      * @param translate
      */
     public final static void translate(float[] matrix, float[] translate) {
-        translateM(matrix, 0, translate[X], translate[Y], translate[Z]);
+        matrix[3] = translate[0];
+        matrix[7] = translate[1];
+        matrix[11] = translate[2];
     }
 
     /**
