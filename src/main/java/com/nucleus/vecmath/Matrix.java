@@ -2,43 +2,17 @@ package com.nucleus.vecmath;
 
 /**
  * This class is NOT thread safe since it uses static temp float arrays
- * 4 x 4 matrix laid out contiguously in memory, translation component is at the 13th, 14th, and 15th element,
- * ie column major. See OpenGL Specification or Android implementation of Matrix.java
+ * 4 x 4 matrix laid out contiguously in memory, translation component is at the 3rd, 7th, and 11th element
+ * Left handed coordinate system
  * Use this for classes that can represent the data as a matrix, for instance a scale or translation
  * 
- * Matrix math utilities. These methods operate on OpenGL ES format
- * matrices and vectors stored in float arrays.
- *
  * Matrices are 4 x 4 column-vector matrices stored in column-major
  * order:
- * 
- * <pre>
- *  m[offset +  0] m[offset +  4] m[offset +  8] m[offset + 12]
- *  m[offset +  1] m[offset +  5] m[offset +  9] m[offset + 13]
- *  m[offset +  2] m[offset +  6] m[offset + 10] m[offset + 14]
- *  m[offset +  3] m[offset +  7] m[offset + 11] m[offset + 15]
- * </pre>
- *
- * Vectors are 4 row x 1 column column-vectors stored in order:
- * 
- * <pre>
- * v[offset + 0]
- * v[offset + 1]
- * v[offset + 2]
- * v[offset + 3]
- * </pre>
- *
- * s *
  * 
  * @author Richard Sahlin
  *
  */
 public abstract class Matrix extends VecMath {
-
-    public final static int TRANSLATE_X = 12;
-    public final static int TRANSLATE_Y = 13;
-    public final static int TRANSLATE_Z = 14;
-    public final static int TRANSLATE_W = 15;
 
     /**
      * Number of elements (values) in a matrix
@@ -121,19 +95,6 @@ public abstract class Matrix extends VecMath {
             matrix[index + 4] *= scale[Y];
             matrix[index + 8] *= scale[Z];
         }
-    }
-
-    /**
-     * Multiply a 3 element vector with a matrix, the resultvector will be transformed using the matrix.
-     * 
-     * @param matrix The transform matrix
-     * @param vec The vector to transform.
-     * @param resultVec The output vector, this is where the result is stored. May not be the same as vec
-     */
-    public final static void transformVec3(float[] matrix, float[] vec, float[] resultVec) {
-        resultVec[0] = matrix[0] * vec[0] + matrix[4] * vec[1] + matrix[8] * vec[2] + matrix[12];
-        resultVec[1] = matrix[1] * vec[0] + matrix[5] * vec[1] + matrix[9] * vec[2] + matrix[13];
-        resultVec[2] = matrix[2] * vec[0] + matrix[6] * vec[1] + matrix[10] * vec[2] + matrix[14];
     }
 
     /**
@@ -380,10 +341,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Computes an orthographic projection matrix.
-     * X axis increasing to the right
-     * Y axis increasing upwards
-     * Z axis increasing into the screen
+     * Computes an orthographic projection matrix for a left handed coordinate system.
      *
      * @param m returns the result
      * @param mOffset
@@ -432,13 +390,13 @@ public abstract class Matrix extends VecMath {
         m[mOffset + 8] = 0.0f;
         m[mOffset + 9] = 0.0f;
         m[mOffset + 11] = 0.0f;
+        // float[] transpose = Matrix.createMatrix();
+        // transposeM(transpose, 0, m, 0);
+        // System.arraycopy(transpose, 0, m, 0, 16);
     }
 
     /**
      * Define a projection matrix in terms of six clip planes
-     * X axis increasing to the right
-     * Y axis increasing upwards
-     * Z axis increasing into the screen
      * 
      * @param m the float array that holds the perspective matrix
      * @param offset the offset into float array m where the perspective
@@ -524,30 +482,6 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Scales matrix m by x, y, and z, putting the result in sm
-     * 
-     * @param sm returns the result
-     * @param smOffset index into sm where the resandroid.opengl.matrixult matrix starts
-     * @param m source matrix
-     * @param mOffset index into m where the source matrix starts
-     * @param x scale factor x
-     * @param y scale factor y
-     * @param z scale factor z
-     */
-    public static void scaleM(float[] sm, int smOffset,
-            float[] m, int mOffset,
-            float x, float y, float z) {
-        for (int i = 0; i < 4; i++) {
-            int smi = smOffset + i;
-            int mi = mOffset + i;
-            sm[smi] = m[mi] * x;
-            sm[4 + smi] = m[4 + mi] * y;
-            sm[8 + smi] = m[8 + mi] * z;
-            sm[12 + smi] = m[12 + mi];
-        }
-    }
-
-    /**
      * Scales matrix m in place by sx, sy, and sz
      * 
      * @param m matrix to scale
@@ -563,49 +497,6 @@ public abstract class Matrix extends VecMath {
             m[mi] *= x;
             m[4 + mi] *= y;
             m[8 + mi] *= z;
-        }
-    }
-
-    /**
-     * Translates matrix m by x, y, and z, putting the result in tm
-     * 
-     * @param tm returns the result
-     * @param tmOffset index into sm where the result matrix starts
-     * @param m source matrix
-     * @param mOffset index into m where the source matrix starts
-     * @param x translation factor x
-     * @param y translation factor y
-     * @param z translation factor z
-     */
-    public static void translateM(float[] tm, int tmOffset,
-            float[] m, int mOffset,
-            float x, float y, float z) {
-        for (int i = 0; i < 12; i++) {
-            tm[tmOffset + i] = m[mOffset + i];
-        }
-        for (int i = 0; i < 4; i++) {
-            int tmi = tmOffset + i;
-            int mi = mOffset + i;
-            tm[12 + tmi] = m[mi] * x + m[4 + mi] * y + m[8 + mi] * z +
-                    m[12 + mi];
-        }
-    }
-
-    /**
-     * Translates matrix m by x, y, and z in place.
-     * 
-     * @param m matrix
-     * @param mOffset index into m where the matrix starts
-     * @param x translation factor x
-     * @param y translation factor y
-     * @param z translation factor z
-     */
-    public static void translateM(
-            float[] m, int mOffset,
-            float x, float y, float z) {
-        for (int i = 0; i < 4; i++) {
-            int mi = mOffset + i;
-            m[3 + mi] += m[mi] * x + m[1 + mi] * y + m[2 + mi] * z;
         }
     }
 
@@ -635,40 +526,6 @@ public abstract class Matrix extends VecMath {
         matrix[11] = translate[2];
     }
 
-    /**
-     * Rotates matrix m by angle a (in degrees) around the axis (x, y, z)
-     * 
-     * @param rm returns the result
-     * @param m source matrix
-     * @param a angle to rotate in degrees
-     * @param x scale factor x
-     * @param y scale factor y
-     * @param z scale factor z
-     */
-    public static void rotateM(float[] rm,
-            float[] m, float a, float x, float y, float z) {
-        setRotateM(temp, 0, a, x, y, z);
-        mul4(m, temp, rm);
-    }
-
-    /**
-     * Rotates matrix m in place by angle a (in degrees)
-     * around the axis (x, y, z)
-     * 
-     * @param m source matrix
-     * @param mOffset index into m where the matrix starts
-     * @param a angle to rotate in degrees
-     * @param x scale factor x
-     * @param y scale factor y
-     * @param z scale factor z
-     */
-    public static void rotateM(float[] m, int mOffset,
-            float a, float x, float y, float z) {
-        setRotateM(temp, 0, a, x, y, z);
-        mul4(m, temp, result);
-        System.arraycopy(result, 0, m, mOffset, 16);
-    }
-
     public static void rotateM(float[] m, AxisAngle axisAngle) {
         if (axisAngle != null) {
             // TODO - should a check be made for 0 values in X,Y,Z axis which results in NaN?
@@ -680,7 +537,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Rotates matrix m by angle a (in degrees) around the axis (x, y, z)
+     * Rotates matrix m by angle a (in degrees) around the axis (x, y, z) using left handed coordinate system.
      * 
      * @param rm returns the result
      * @param rmOffset index into rm where the result matrix starts
@@ -755,95 +612,6 @@ public abstract class Matrix extends VecMath {
             rm[rmOffset + 6] = yz * nc + xs;
             rm[rmOffset + 10] = z * z * nc + c;
         }
-    }
-
-    /**
-     * Define a viewing transformation in terms of an eye point, a center of
-     * view, and an up vector.
-     *
-     * @param rm returns the result
-     * @param rmOffset index into rm where the result matrix starts
-     * @param eyeX eye point X
-     * @param eyeY eye point Y
-     * @param eyeZ eye point Z
-     * @param centerX center of view X
-     * @param centerY center of view Y
-     * @param centerZ center of view Z
-     * @param upX up vector X
-     * @param upY up vector Y
-     * @param upZ up vector Z
-     */
-    public static void setLookAtM(float[] rm, int rmOffset,
-            float eyeX, float eyeY, float eyeZ,
-            float centerX, float centerY, float centerZ, float upX, float upY,
-            float upZ) {
-
-        // See the OpenGL GLUT documentation for gluLookAt for a description
-        // of the algorithm. We implement it in a straightforward way:
-
-        float fx = centerX - eyeX;
-        float fy = centerY - eyeY;
-        float fz = centerZ - eyeZ;
-
-        // Normalize f
-        float rlf = 1.0f / Matrix.length(fx, fy, fz);
-        fx *= rlf;
-        fy *= rlf;
-        fz *= rlf;
-
-        // compute s = f x up (x means "cross product")
-        float sx = fy * upZ - fz * upY;
-        float sy = fz * upX - fx * upZ;
-        float sz = fx * upY - fy * upX;
-
-        // and normalize s
-        float rls = 1.0f / Matrix.length(sx, sy, sz);
-        sx *= rls;
-        sy *= rls;
-        sz *= rls;
-
-        // compute u = s x f
-        float ux = sy * fz - sz * fy;
-        float uy = sz * fx - sx * fz;
-        float uz = sx * fy - sy * fx;
-
-        rm[rmOffset + 0] = sx;
-        rm[rmOffset + 1] = ux;
-        rm[rmOffset + 2] = -fx;
-        rm[rmOffset + 3] = 0.0f;
-
-        rm[rmOffset + 4] = sy;
-        rm[rmOffset + 5] = uy;
-        rm[rmOffset + 6] = -fy;
-        rm[rmOffset + 7] = 0.0f;
-
-        rm[rmOffset + 8] = sz;
-        rm[rmOffset + 9] = uz;
-        rm[rmOffset + 10] = -fz;
-        rm[rmOffset + 11] = 0.0f;
-
-        rm[rmOffset + 12] = 0.0f;
-        rm[rmOffset + 13] = 0.0f;
-        rm[rmOffset + 14] = 0.0f;
-        rm[rmOffset + 15] = 1.0f;
-
-        translateM(rm, rmOffset, -eyeX, -eyeY, -eyeZ);
-    }
-
-    /**
-     * Set a row in the matrix from the specified source, beginning at offset.
-     * This will set value row, row + 4, row + 8, row + 12, ie not consecutive memory addresses.
-     *
-     * @param matrix
-     * @param row
-     * @param source
-     * @param offset
-     */
-    public final static void setRow(float[] matrix, int row, float[] source, int offset) {
-        matrix[row] = source[offset++];
-        matrix[row + 4] = source[offset++];
-        matrix[row + 8] = source[offset++];
-        matrix[row + 12] = source[offset++];
     }
 
 }
