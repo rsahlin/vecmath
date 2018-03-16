@@ -521,9 +521,7 @@ public abstract class Matrix extends VecMath {
      * @param translate
      */
     public final static void translate(float[] matrix, float[] translate) {
-        matrix[3] = translate[0];
-        matrix[7] = translate[1];
-        matrix[11] = translate[2];
+        translate(matrix, translate[0], translate[1], translate[2]);
     }
 
     public static void rotateM(float[] m, AxisAngle axisAngle) {
@@ -612,6 +610,18 @@ public abstract class Matrix extends VecMath {
             rm[rmOffset + 6] = yz * nc + xs;
             rm[rmOffset + 10] = z * z * nc + c;
         }
+    }
+
+    /**
+     * Exctract the scale from the given matrix
+     * 
+     * @param matrix
+     * @param result
+     */
+    public static final void getScale(float[] matrix, float[] result) {
+        result[0] = (float) Math.sqrt(matrix[0] * matrix[0] + matrix[4] * matrix[4] + matrix[8] * matrix[8]);
+        result[1] = (float) Math.sqrt(matrix[1] * matrix[1] + matrix[5] * matrix[5] + matrix[9] * matrix[9]);
+        result[2] = (float) Math.sqrt(matrix[2] * matrix[2] + matrix[6] * matrix[6] + matrix[10] * matrix[10]);
     }
 
 }
