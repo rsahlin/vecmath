@@ -390,9 +390,6 @@ public abstract class Matrix extends VecMath {
         m[mOffset + 8] = 0.0f;
         m[mOffset + 9] = 0.0f;
         m[mOffset + 11] = 0.0f;
-        // float[] transpose = Matrix.createMatrix();
-        // transposeM(transpose, 0, m, 0);
-        // System.arraycopy(transpose, 0, m, 0, 16);
     }
 
     /**
