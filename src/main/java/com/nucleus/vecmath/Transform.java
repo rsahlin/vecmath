@@ -21,10 +21,10 @@ public final class Transform extends Matrix {
     AxisAngle axisAngle;
 
     @SerializedName(SCALE)
-    float[] scale = new float[] { 1, 1, 1 };
+    float[] scale;
 
     @SerializedName(TRANSLATE)
-    float[] translate = new float[3];
+    float[] translate;
 
     @SerializedName(SCALE_LIMIT)
     private Limiter scaleLimit;
@@ -34,6 +34,7 @@ public final class Transform extends Matrix {
      */
     public Transform() {
         super();
+        Matrix.setIdentity(matrix, 0);
     }
 
     /**
@@ -43,6 +44,7 @@ public final class Transform extends Matrix {
      * @param source
      */
     public Transform(Transform source) {
+        Matrix.setIdentity(matrix, 0);
         set(source);
     }
 
@@ -52,8 +54,14 @@ public final class Transform extends Matrix {
      * @param source
      */
     public void set(Transform source) {
-        setScale(source.getScale());
-        setTranslate(source.getTranslate());
+        if (source.scale != null) {
+            scale = new float[3];
+            setScale(source.scale);
+        }
+        if (source.translate != null) {
+            translate = new float[3];
+            setTranslate(source.translate);
+        }
         if (source.axisAngle != null) {
             axisAngle = new AxisAngle();
             axisAngle.setValues(source.getAxisAngle().getValues());
@@ -178,12 +186,25 @@ public final class Transform extends Matrix {
         return axisAngle;
     }
 
+    /**
+     * Sets the transform to the matrix, values are copied to the matrix in this class
+     * This matrix will only be used if axis angle, scale and translate fields are null - otherwise the matrix will be
+     * overwritten when {@link #getMatrix()} is called.
+     * 
+     * @param matrix ref to matrix or null to remove.
+     */
+    public void setMatrix(float[] matrix) {
+        System.arraycopy(matrix, 0, this.matrix, 0, Matrix.MATRIX_ELEMENTS);
+    }
+
     @Override
     public float[] getMatrix() {
-        Matrix.setIdentity(matrix, 0);
-        Matrix.rotateM(matrix, axisAngle);
-        Matrix.scaleM(matrix, 0, scale);
-        Matrix.translate(matrix, translate);
+        if (axisAngle != null || scale != null || translate != null) {
+            Matrix.setIdentity(matrix, 0);
+            Matrix.rotateM(matrix, axisAngle);
+            Matrix.scaleM(matrix, 0, scale);
+            Matrix.translate(matrix, translate);
+        }
         return matrix;
     }
 
