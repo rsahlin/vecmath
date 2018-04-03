@@ -28,6 +28,10 @@ public final class AxisAngle extends VecMath {
         super();
     }
 
+    public AxisAngle(float x, float y, float z, float angle) {
+        setValues(x, y, z, angle);
+    }
+
     /**
      * Creates a copy of the specified axis angle, all values are copied.
      * 
@@ -73,7 +77,8 @@ public final class AxisAngle extends VecMath {
         axisAngle[Z] = values[Z];
         axisAngle[ANGLE] = values[ANGLE];
         if (axisAngle[X] == 0 && axisAngle[Y] == 0 && axisAngle[Z] == 0) {
-        	throw new IllegalArgumentException("Invalid axis:" + axisAngle[X] + ", " + axisAngle[Y] + ", " + axisAngle[Z]);
+            throw new IllegalArgumentException(
+                    "Invalid axis:" + axisAngle[X] + ", " + axisAngle[Y] + ", " + axisAngle[Z]);
         }
 
     }

@@ -11,16 +11,22 @@ import com.google.gson.annotations.SerializedName;
  */
 public final class Transform extends Matrix {
 
-    @SerializedName("axisAngle")
+    public static final String TRANSFORM = "transform";
+    public static final String AXIS_ANGLE = "axisAngle";
+    public static final String SCALE = "scale";
+    public static final String TRANSLATE = "translate";
+    public static final String SCALE_LIMIT = "scaleLimit";
+
+    @SerializedName(AXIS_ANGLE)
     AxisAngle axisAngle;
 
-    @SerializedName("scale")
+    @SerializedName(SCALE)
     float[] scale = new float[] { 1, 1, 1 };
 
-    @SerializedName("translate")
+    @SerializedName(TRANSLATE)
     float[] translate = new float[3];
 
-    @SerializedName("scaleLimit")
+    @SerializedName(SCALE_LIMIT)
     private Limiter scaleLimit;
 
     /**
@@ -91,6 +97,7 @@ public final class Transform extends Matrix {
 
     /**
      * Adds the specified translation in x and y
+     * 
      * @param x
      * @param y
      */
@@ -98,7 +105,7 @@ public final class Transform extends Matrix {
         translate[X] += x;
         translate[Y] += y;
     }
-    
+
     /**
      * Returns the z,y, z axis scale
      * The returned array will be a reference to the scale in this class.
@@ -175,8 +182,8 @@ public final class Transform extends Matrix {
     public float[] getMatrix() {
         Matrix.setIdentity(matrix, 0);
         Matrix.rotateM(matrix, axisAngle);
-        Matrix.translate(matrix, translate);
         Matrix.scaleM(matrix, 0, scale);
+        Matrix.translate(matrix, translate);
         return matrix;
     }
 
