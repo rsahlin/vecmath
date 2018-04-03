@@ -211,5 +211,14 @@ public final class Vector2D extends VecMath {
     public void mult(float scalar) {
         vector[MAGNITUDE] = vector[MAGNITUDE] * scalar;
     }
-    
+
+    /**
+     * Returns the length (hypothenuse)
+     * 
+     * @return
+     */
+    public float getLength() {
+        return (float) Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
+    }
+
 }

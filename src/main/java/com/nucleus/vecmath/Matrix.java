@@ -89,11 +89,13 @@ public abstract class Matrix extends VecMath {
      * @param z
      */
     public static void scaleM(float[] matrix, int offset, float[] scale) {
-        for (int i = 0; i < 4; i++) {
-            int index = offset + i;
-            matrix[index] *= scale[X];
-            matrix[index + 4] *= scale[Y];
-            matrix[index + 8] *= scale[Z];
+        if (scale != null) {
+            for (int i = 0; i < 4; i++) {
+                int index = offset + i;
+                matrix[index] *= scale[X];
+                matrix[index + 4] *= scale[Y];
+                matrix[index + 8] *= scale[Z];
+            }
         }
     }
 
@@ -518,7 +520,9 @@ public abstract class Matrix extends VecMath {
      * @param translate
      */
     public final static void translate(float[] matrix, float[] translate) {
-        translate(matrix, translate[0], translate[1], translate[2]);
+        if (translate != null) {
+            translate(matrix, translate[0], translate[1], translate[2]);
+        }
     }
 
     public static void rotateM(float[] m, AxisAngle axisAngle) {
@@ -607,6 +611,22 @@ public abstract class Matrix extends VecMath {
             rm[rmOffset + 6] = yz * nc + xs;
             rm[rmOffset + 10] = z * z * nc + c;
         }
+    }
+
+    public static void setRotateTo(float[] position, float[] matrix) {
+        Matrix.setIdentity(matrix, 0);
+
+        Vector2D vec = new Vector2D(position);
+        vec.normalize();
+        float hyp = vec.getLength();
+        float sz = vec.vector[1] / hyp;
+        float cz = vec.vector[0] / hyp;
+        matrix[0] = cz;
+        matrix[1] = -sz;
+
+        matrix[4] = sz;
+        matrix[5] = cz;
+
     }
 
     /**
