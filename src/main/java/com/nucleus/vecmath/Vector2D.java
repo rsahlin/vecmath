@@ -16,7 +16,7 @@ public final class Vector2D extends VecMath {
     }
 
     /**
-     * Creates a new 2 vector from p1 to p2
+     * Creates a new 2 vector from p1 to p2, vector will not be normalized.
      * 
      * @param p1
      * @param p2
@@ -28,30 +28,10 @@ public final class Vector2D extends VecMath {
     }
 
     /**
-     * Sets x and y as normalized direction and magnitude.
-     * If length is 0 then magnitude is set to 0
-     * 
-     * @param x Size of vector x axis
-     * @param y Size of vector y axis
-     */
-    public void setNormalized(float x, float y) {
-        float length = length(x, y);
-        if (length == 0) {
-            vector[X] = x;
-            vector[Y] = y;
-            vector[MAGNITUDE] = 0;
-            return;
-        }
-        vector[X] = x / length;
-        vector[Y] = y / length;
-        vector[MAGNITUDE] = length;
-    }
-
-    /**
      * Normalizes the vector, magnitude will be 1
      */
     public void normalize() {
-        float length = length(vector[X], vector[Y]);
+        float length = getLength();
         vector[X] = vector[X] / length;
         vector[Y] = vector[Y] / length;
         vector[MAGNITUDE] = 1;
@@ -71,7 +51,7 @@ public final class Vector2D extends VecMath {
     }
 
     /**
-     * Computes the length of the 2D vector made up of x and y.
+     * Computes the length (hypothenuse) of the 2D vector made up of x and y.
      * 
      * @param x
      * @param y
@@ -176,22 +156,6 @@ public final class Vector2D extends VecMath {
     }
 
     /**
-     * Calculate the length of the Vector. To get the normalized unit length
-     * call normalize()
-     * Note that no error checking is done, the source array must contain 2 values at index.
-     * 
-     * @param vector Array with vector values
-     * @param index Index into array where vector starts.
-     * @return The length of the vector
-     */
-    public final static float length(float[] vector, int index) {
-        return (float) Math
-                .sqrt((vector[X + index] * vector[X + index])
-                        + (vector[Y + index] * vector[Y + index]));
-
-    }
-
-    /**
      * Sets the destination vector, going from vector2 to vector1
      * 
      * @param vector1
@@ -213,12 +177,32 @@ public final class Vector2D extends VecMath {
     }
 
     /**
-     * Returns the length (hypothenuse)
+     * Returns the length (hypothenuse) of this vector
      * 
      * @return
      */
     public float getLength() {
-        return (float) Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
+        float x = vector[X] * vector[MAGNITUDE];
+        float y = vector[Y] * vector[MAGNITUDE];
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    /**
+     * Returns the sine of the vector angle - sin A = Y / HYP
+     * 
+     * @return
+     */
+    public float getSin() {
+        return (vector[Y] * vector[MAGNITUDE]) / getLength();
+    }
+
+    /**
+     * Returns the cos of the vector angle - cos A = X / HYP
+     * 
+     * @return
+     */
+    public float getCos() {
+        return (vector[X] * vector[MAGNITUDE]) / getLength();
     }
 
 }

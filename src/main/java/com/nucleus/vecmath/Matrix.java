@@ -80,6 +80,20 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
+     * Copies the source matrix into the destination, returning the destination matrix
+     * 
+     * @param source
+     * @param srcPos
+     * @param dest
+     * @param destPos
+     * @return
+     */
+    public final static float[] copy(float[] source, int srcPos, float[] dest, int destPos) {
+        System.arraycopy(source, srcPos, dest, destPos, MATRIX_ELEMENTS);
+        return dest;
+    }
+
+    /**
      * Scales the matrix
      * 
      * @param m
@@ -616,17 +630,18 @@ public abstract class Matrix extends VecMath {
     public static void setRotateTo(float[] position, float[] matrix) {
         Matrix.setIdentity(matrix, 0);
 
-        Vector2D vec = new Vector2D(position);
+        // Since sin and cos are calculated by X axis rotation is 90 degrees ccw, swap to align with left handed
+        // coordinate system.
+        // TODO: Add axis direction as a parameter?
+        Vector2D vec = new Vector2D(new float[] { position[1], -position[0] });
         vec.normalize();
-        float hyp = vec.getLength();
-        float sz = vec.vector[1] / hyp;
-        float cz = vec.vector[0] / hyp;
+        float sz = vec.getSin();
+        float cz = vec.getCos();
         matrix[0] = cz;
         matrix[1] = -sz;
 
         matrix[4] = sz;
         matrix[5] = cz;
-
     }
 
     /**
