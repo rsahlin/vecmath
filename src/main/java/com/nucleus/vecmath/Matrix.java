@@ -80,6 +80,20 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
+     * Copies the source matrix into the destination, returning the destination matrix
+     * 
+     * @param source
+     * @param srcPos
+     * @param dest
+     * @param destPos
+     * @return
+     */
+    public final static float[] copy(float[] source, int srcPos, float[] dest, int destPos) {
+        System.arraycopy(source, srcPos, dest, destPos, MATRIX_ELEMENTS);
+        return dest;
+    }
+
+    /**
      * Scales the matrix
      * 
      * @param m
