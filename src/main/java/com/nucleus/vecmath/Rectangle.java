@@ -102,6 +102,18 @@ public class Rectangle {
     }
 
     /**
+     * Scales the rectangle x,y,widht and height.
+     * 
+     * @param scale Scale factor
+     */
+    public void scale(float scale) {
+        values[X] *= scale;
+        values[Y] *= scale;
+        values[WIDTH] *= scale;
+        values[HEIGHT] *= scale;
+    }
+
+    /**
      * Copies the values from the source into this class, creating the value array if it does not exist.
      * 
      * @param values
