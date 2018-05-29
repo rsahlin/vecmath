@@ -164,89 +164,25 @@ public abstract class Matrix extends VecMath {
      */
     public final static void mul4(float[] m1, float[] m2, float[] destination) {
         // Concatenate matrix 1 with matrix 2, 4*4
-        destination[0] = (m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2] + m1[12] * m2[3]);
-        destination[4] = (m1[0] * m2[4] + m1[4] * m2[5] + m1[8] * m2[6] + m1[12] * m2[7]);
-        destination[8] = (m1[0] * m2[8] + m1[4] * m2[9] + m1[8] * m2[10] + m1[12] * m2[11]);
-        destination[12] = (m1[0] * m2[12] + m1[4] * m2[13] + m1[8] * m2[14] + m1[12] * m2[15]);
+        destination[0] = (m1[0] * m2[0] + m1[1] * m2[4] + m1[2] * m2[8] + m1[3] * m2[12]);
+        destination[1] = (m1[0] * m2[1] + m1[1] * m2[5] + m1[2] * m2[9] + m1[3] * m2[13]);
+        destination[2] = (m1[0] * m2[2] + m1[1] * m2[6] + m1[2] * m2[10] + m1[3] * m2[14]);
+        destination[3] = (m1[0] * m2[3] + m1[1] * m2[7] + m1[2] * m2[11] + m1[3] * m2[15]);
 
-        destination[1] = (m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2] + m1[13] * m2[3]);
-        destination[5] = (m1[1] * m2[4] + m1[5] * m2[5] + m1[9] * m2[6] + m1[13] * m2[7]);
-        destination[9] = (m1[1] * m2[8] + m1[5] * m2[9] + m1[9] * m2[10] + m1[13] * m2[11]);
-        destination[13] = (m1[1] * m2[12] + m1[5] * m2[13] + m1[9] * m2[14] + m1[13] * m2[15]);
+        destination[4] = (m1[4] * m2[0] + m1[5] * m2[4] + m1[6] * m2[8] + m1[7] * m2[12]);
+        destination[5] = (m1[4] * m2[1] + m1[5] * m2[5] + m1[6] * m2[9] + m1[7] * m2[13]);
+        destination[6] = (m1[4] * m2[2] + m1[5] * m2[6] + m1[6] * m2[10] + m1[7] * m2[14]);
+        destination[7] = (m1[4] * m2[3] + m1[5] * m2[7] + m1[6] * m2[11] + m1[7] * m2[15]);
 
-        destination[2] = (m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2] + m1[14] * m2[3]);
-        destination[6] = (m1[2] * m2[4] + m1[6] * m2[5] + m1[10] * m2[6] + m1[14] * m2[7]);
-        destination[10] = (m1[2] * m2[8] + m1[6] * m2[9] + m1[10] * m2[10] + m1[14] * m2[11]);
-        destination[14] = (m1[2] * m2[12] + m1[6] * m2[13] + m1[10] * m2[14] + m1[14] * m2[15]);
+        destination[8] = (m1[8] * m2[0] + m1[9] * m2[4] + m1[10] * m2[8] + m1[11] * m2[12]);
+        destination[9] = (m1[8] * m2[1] + m1[9] * m2[5] + m1[10] * m2[9] + m1[11] * m2[13]);
+        destination[10] = (m1[8] * m2[2] + m1[9] * m2[6] + m1[10] * m2[10] + m1[11] * m2[14]);
+        destination[11] = (m1[8] * m2[3] + m1[9] * m2[7] + m1[10] * m2[11] + m1[11] * m2[15]);
 
-        destination[3] = (m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2] + m1[15] * m2[3]);
-        destination[7] = (m1[3] * m2[4] + m1[7] * m2[5] + m1[11] * m2[6] + m1[15] * m2[7]);
-        destination[11] = (m1[3] * m2[8] + m1[7] * m2[9] + m1[11] * m2[10] + m1[15] * m2[11]);
-        destination[15] = (m1[3] * m2[12] + m1[7] * m2[13] + m1[11] * m2[14] + m1[15] * m2[15]);
-
-    }
-
-    /**
-     * Concatenate matrix with matrix2 and store the result in matrix
-     * 
-     * @param matrix Source 1 matrix - matrix1 * matrix2 stored here
-     * @param matrix2 Source 2 matrix
-     */
-    public static void mul4(float[] matrix, float[] matrix2) {
-        float temp_float1, temp_float2, temp_float3, temp_float4;
-
-        // Concatenate this with matrix 2, 4*4
-        temp_float1 = (matrix[0] * matrix2[0] + matrix[1] * matrix2[4] + matrix[2] * matrix2[8] +
-                matrix[3] * matrix2[12]);
-        temp_float2 = (matrix[0] * matrix2[1] + matrix[1] * matrix2[5] + matrix[2] * matrix2[9] +
-                matrix[3] * matrix2[13]);
-        temp_float3 = (matrix[0] * matrix2[2] + matrix[1] * matrix2[6] + matrix[2] * matrix2[10] +
-                matrix[3] * matrix2[14]);
-        temp_float4 = (matrix[0] * matrix2[3] + matrix[1] * matrix2[7] + matrix[2] * matrix2[11] +
-                matrix[3] * matrix2[15]);
-        matrix[0] = temp_float1;
-        matrix[4] = temp_float2;
-        matrix[8] = temp_float3;
-        matrix[12] = temp_float4;
-
-        temp_float1 = (matrix[4] * matrix2[0] + matrix[5] * matrix2[4] + matrix[6] * matrix2[8] +
-                matrix[7] * matrix2[12]);
-        temp_float2 = (matrix[4] * matrix2[1] + matrix[5] * matrix2[5] + matrix[6] * matrix2[9] +
-                matrix[7] * matrix2[13]);
-        temp_float3 = (matrix[4] * matrix2[2] + matrix[5] * matrix2[6] + matrix[6] * matrix2[10] +
-                matrix[7] * matrix2[14]);
-        temp_float4 = (matrix[4] * matrix2[3] + matrix[5] * matrix2[7] + matrix[6] * matrix2[11] +
-                matrix[7] * matrix2[15]);
-        matrix[1] = temp_float1;
-        matrix[5] = temp_float2;
-        matrix[9] = temp_float3;
-        matrix[13] = temp_float4;
-
-        temp_float1 = (matrix[8] * matrix2[0] + matrix[9] * matrix2[4] + matrix[10] * matrix2[8] +
-                matrix[11] * matrix2[12]);
-        temp_float2 = (matrix[8] * matrix2[1] + matrix[9] * matrix2[5] + matrix[10] * matrix2[9] +
-                matrix[11] * matrix2[13]);
-        temp_float3 = (matrix[8] * matrix2[2] + matrix[9] * matrix2[6] + matrix[10] * matrix2[10] +
-                matrix[11] * matrix2[14]);
-        temp_float4 = (matrix[8] * matrix2[3] + matrix[9] * matrix2[7] + matrix[10] * matrix2[11] +
-                matrix[11] * matrix2[15]);
-        matrix[2] = temp_float1;
-        matrix[6] = temp_float2;
-        matrix[10] = temp_float3;
-        matrix[14] = temp_float4;
-
-        temp_float1 = (matrix[12] * matrix2[0] + matrix[13] * matrix2[4] + matrix[14] * matrix2[8] +
-                matrix[15] * matrix2[12]);
-        temp_float2 = (matrix[12] * matrix2[1] + matrix[13] * matrix2[5] + matrix[14] * matrix2[9] +
-                matrix[15] * matrix2[13]);
-        temp_float3 = (matrix[12] * matrix2[2] + matrix[13] * matrix2[6] + matrix[14] * matrix2[10]
-                + matrix[15] * matrix2[14]);
-        temp_float4 = (matrix[12] * matrix2[3] + matrix[13] * matrix2[7] + matrix[14] * matrix2[11]
-                + matrix[15] * matrix2[15]);
-        matrix[3] = temp_float1;
-        matrix[7] = temp_float2;
-        matrix[11] = temp_float3;
-        matrix[15] = temp_float4;
+        destination[12] = (m1[12] * m2[0] + m1[13] * m2[4] + m1[14] * m2[8] + m1[15] * m2[12]);
+        destination[13] = (m1[12] * m2[1] + m1[13] * m2[5] + m1[14] * m2[9] + m1[15] * m2[13]);
+        destination[14] = (m1[12] * m2[2] + m1[13] * m2[6] + m1[14] * m2[10] + m1[15] * m2[14]);
+        destination[15] = (m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15]);
 
     }
 
@@ -357,7 +293,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Computes an orthographic projection matrix for a left handed coordinate system.
+     * Computes an orthographic projection matrix for a left handed coordinate system - row major
      *
      * @param m returns the result
      * @param mOffset
@@ -393,23 +329,23 @@ public abstract class Matrix extends VecMath {
         m[mOffset + 0] = x;
         m[mOffset + 5] = y;
         m[mOffset + 10] = z;
-        m[mOffset + 12] = tx;
-        m[mOffset + 13] = ty;
-        m[mOffset + 14] = tz;
+        m[mOffset + 3] = tx;
+        m[mOffset + 7] = ty;
+        m[mOffset + 11] = tz;
         m[mOffset + 15] = 1.0f;
         m[mOffset + 1] = 0.0f;
         m[mOffset + 2] = 0.0f;
-        m[mOffset + 3] = 0.0f;
         m[mOffset + 4] = 0.0f;
         m[mOffset + 6] = 0.0f;
-        m[mOffset + 7] = 0.0f;
         m[mOffset + 8] = 0.0f;
         m[mOffset + 9] = 0.0f;
-        m[mOffset + 11] = 0.0f;
+        m[mOffset + 12] = 0.0f;
+        m[mOffset + 13] = 0.0f;
+        m[mOffset + 14] = 0.0f;
     }
 
     /**
-     * Define a projection matrix in terms of six clip planes
+     * Define a projection matrix in terms of six clip planes - row major
      * 
      * @param m the float array that holds the perspective matrix
      * @param offset the offset into float array m where the perspective
@@ -451,19 +387,19 @@ public abstract class Matrix extends VecMath {
         final float D = 2.0f * (far * near * r_depth);
         m[offset + 0] = x;
         m[offset + 5] = y;
-        m[offset + 8] = A;
-        m[offset + 9] = B;
         m[offset + 10] = C;
-        m[offset + 14] = D;
-        m[offset + 11] = 1.0f;
+        m[offset + 2] = A;
+        m[offset + 6] = B;
+        m[offset + 11] = D;
         m[offset + 1] = 0.0f;
-        m[offset + 2] = 0.0f;
         m[offset + 3] = 0.0f;
         m[offset + 4] = 0.0f;
-        m[offset + 6] = 0.0f;
         m[offset + 7] = 0.0f;
+        m[offset + 8] = 0.0f;
+        m[offset + 9] = 0.0f;
         m[offset + 12] = 0.0f;
         m[offset + 13] = 0.0f;
+        m[offset + 14] = 1.0f;
         m[offset + 15] = 0.0f;
     }
 
@@ -495,7 +431,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Scales matrix m in place by sx, sy, and sz
+     * Scales matrix m in place by sx, sy, and sz - row major
      * 
      * @param m matrix to scale
      * @param mOffset index into m where the matrix starts
@@ -514,7 +450,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Translate the matrix, OpenGL row wise, along x,y and z axis
+     * Translate the matrix, OpenGL row wise, along x,y and z axis - row major
      * 
      * @param matrix
      * @param x
