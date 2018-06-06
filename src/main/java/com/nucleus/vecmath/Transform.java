@@ -30,6 +30,11 @@ public final class Transform extends Matrix {
     private Limiter scaleLimit;
 
     /**
+     * If true then matrix will not be calculated when {@link #getMatrix()} is called - use {@link #setMatrix(float[])}
+     */
+    transient protected boolean matrixMode = false;
+
+    /**
      * Default constructor
      */
     public Transform() {
@@ -187,19 +192,24 @@ public final class Transform extends Matrix {
     }
 
     /**
-     * Sets the transform to the matrix, values are copied to the matrix in this class
-     * This matrix will only be used if axis angle, scale and translate fields are null - otherwise the matrix will be
-     * overwritten when {@link #getMatrix()} is called.
+     * Sets the transform to the matrix, values are copied to the matrix in this class.
+     * This matrix will override the values in rotate,scale and translate.
+     * To stop using this matrix, call with null matrix.
      * 
      * @param matrix ref to matrix or null to remove.
      */
     public void setMatrix(float[] matrix) {
-        System.arraycopy(matrix, 0, this.matrix, 0, Matrix.MATRIX_ELEMENTS);
+        if (matrix != null) {
+            System.arraycopy(matrix, 0, this.matrix, 0, Matrix.MATRIX_ELEMENTS);
+            matrixMode = true;
+        } else {
+            matrixMode = false;
+        }
     }
 
     @Override
     public float[] getMatrix() {
-        if (axisAngle != null || scale != null || translate != null) {
+        if (!matrixMode && (axisAngle != null || scale != null || translate != null)) {
             Matrix.setIdentity(matrix, 0);
             Matrix.rotateM(matrix, axisAngle);
             Matrix.scaleM(matrix, 0, scale);
