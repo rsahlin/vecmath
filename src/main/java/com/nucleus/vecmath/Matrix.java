@@ -458,9 +458,9 @@ public abstract class Matrix extends VecMath {
      * @param z
      */
     public final static void translate(float[] matrix, float x, float y, float z) {
-        matrix[3] = x;
-        matrix[7] = y;
-        matrix[11] = z;
+        matrix[3] += x;
+        matrix[7] += y;
+        matrix[11] += z;
     }
 
     /**
@@ -563,25 +563,71 @@ public abstract class Matrix extends VecMath {
         }
     }
 
-    public static void setRotateTo(float[] position, float[] matrix) {
-        Matrix.setIdentity(matrix, 0);
+    /**
+     * Sets the matrix to rotate to the 2D position - ie this rotates along Z axis so that the object
+     * is facing the 2D position.
+     * 
+     * @param position
+     * @param matrix The matrix to set rotation to - only affected values are set.
+     */
+    public static void setRotateZTo2D(float[] position, float[] matrix) {
 
-        // Since sin and cos are calculated by X axis rotation is 90 degrees ccw, swap to align with left handed
-        // coordinate system.
-        // TODO: Add axis direction as a parameter?
-        Vector2D vec = new Vector2D(new float[] { position[1], -position[0] });
-        vec.normalize();
-        float sz = vec.getSin();
-        float cz = vec.getCos();
-        matrix[0] = cz;
-        matrix[1] = -sz;
+        Vec3 vec1 = new Vec3(0, 1, 0);
+        Vec3 vec2 = new Vec3(position[0], position[1], 0);
+        vec2.normalize();
 
-        matrix[4] = sz;
-        matrix[5] = cz;
+        float cosZ = Vec3.dotZAxis(vec1, vec2);
+        float sinZ = Vec3.crossZAxis(vec1, vec2);
+        if (cosZ == 0f && sinZ == 0f) {
+            cosZ = 1;
+        }
+
+        matrix[0] = cosZ;
+        matrix[1] = -sinZ;
+
+        matrix[4] = sinZ;
+        matrix[5] = cosZ;
     }
 
     /**
-     * Exctract the scale from the given matrix
+     * Sets the matrix to rotate to the 3D position
+     * Work in progress - not done yet
+     * 
+     * @param position
+     * @param matrix The matrix to set rotation to - only affected values are set.
+     */
+    public static void setRotateTo3D(float[] position, float[] matrix) {
+
+        Vec3 vec1 = new Vec3(0, 1, 0);
+        Vec3 vec2 = new Vec3(position);
+        vec2.normalize();
+
+        float cosZ = Vec3.dotZAxis(vec1, vec2);
+        float sinZ = Vec3.crossZAxis(vec1, vec2);
+        if (cosZ == 0f && sinZ == 0f) {
+            cosZ = 1;
+        }
+        vec1.values[1] = 0;
+        vec1.values[2] = 1;
+        float cosX = Vec3.dotXAxis(vec1, vec2);
+        float sinX = Vec3.crossXAxis(vec1, vec2);
+
+        // matrix[0] = cosZ;
+        // matrix[1] = -sinZ;
+
+        // matrix[4] = sinZ;
+        // matrix[5] = cosZ;
+        // matrix[6] = -sinX;
+        matrix[5] = cosX;
+        matrix[6] = -sinX;
+
+        matrix[9] = sinX;
+        matrix[10] = cosX;
+
+    }
+
+    /**
+     * Extract the scale from the given matrix
      * 
      * @param matrix
      * @param result

@@ -6,12 +6,12 @@ package com.nucleus.vecmath;
  * float[] with an index.
  *
  */
-public final class Vector2D extends VecMath {
+public final class Vec2 extends VecMath {
 
     public final static int MAGNITUDE = 2;
     public final float[] vector = new float[3];
 
-    public Vector2D() {
+    public Vec2() {
 
     }
 
@@ -21,7 +21,7 @@ public final class Vector2D extends VecMath {
      * @param p1
      * @param p2
      */
-    public Vector2D(float[] p1, float[] p2) {
+    public Vec2(float[] p1, float[] p2) {
         vector[X] = p2[X] - p1[X];
         vector[Y] = p2[Y] - p1[Y];
         vector[MAGNITUDE] = 1;
@@ -43,7 +43,7 @@ public final class Vector2D extends VecMath {
      * 
      * @param values
      */
-    public Vector2D(float[] values) {
+    public Vec2(float[] values) {
         float length = length(values[X], values[Y]);
         vector[X] = values[X] / length;
         vector[Y] = values[Y] / length;
@@ -67,7 +67,7 @@ public final class Vector2D extends VecMath {
      * @param vector2
      * @return The dot product of the 2 Vectors
      */
-    public final float dot(Vector2D vector2) {
+    public final float dot(Vec2 vector2) {
         return vector[X] * vector2.vector[X] + vector[Y] * vector2.vector[Y];
     }
 
