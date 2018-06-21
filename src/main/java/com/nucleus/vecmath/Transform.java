@@ -218,4 +218,14 @@ public final class Transform extends Matrix {
         return matrix;
     }
 
+    /**
+     * Returns true if this transform uses matrix mode, ie transform is not specified by rotate, scale and translate -
+     * instread the matrix is used.
+     * 
+     * @return True if this transform uses a matrix.
+     */
+    public boolean isMatrixMode() {
+        return matrixMode;
+    }
+
 }
