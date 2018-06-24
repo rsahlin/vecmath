@@ -102,21 +102,23 @@ public final class Transform extends Matrix {
      * 
      * @param add The values to add to the current translation
      */
-    public void addTranslation(float[] add) {
+    public void translate(float[] add) {
         translate[X] += add[X];
         translate[Y] += add[Y];
         translate[Z] += add[Z];
     }
 
     /**
-     * Adds the specified translation in x and y
+     * Adds the specified translation in x, y and z
      * 
      * @param x
      * @param y
+     * @param z
      */
-    public void translate(float x, float y) {
+    public void translate(float x, float y, float z) {
         translate[X] += x;
         translate[Y] += y;
+        translate[Z] += z;
     }
 
     /**
