@@ -209,7 +209,24 @@ public final class Transform extends Matrix {
         }
     }
 
-    @Override
+    /**
+     * Enables or disables matrix mode, if matrixMode is enabled then the {@link #getMatrix()} method will return the
+     * existing matrix.
+     * 
+     * @param matrixMode
+     */
+    public void setMatrixMode(boolean matrixMode) {
+        this.matrixMode = matrixMode;
+    }
+
+    /**
+     * If matrix mode is enabled the matrix is returned, otherwise the rotate, scale and translate is set in the matrix
+     * before it is returned.
+     * Set matrix by calling {@link #setMatrix(float[])} and toggle use of matrix mode by calling
+     * {@link #setMatrix(float[])}
+     * 
+     * @return
+     */
     public float[] getMatrix() {
         if (!matrixMode && (axisAngle != null || scale != null || translate != null)) {
             Matrix.setIdentity(matrix, 0);
