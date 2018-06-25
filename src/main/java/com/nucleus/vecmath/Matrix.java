@@ -34,13 +34,6 @@ public abstract class Matrix extends VecMath {
     private static float[] result = new float[16];
 
     /**
-     * Returns a matrix with the values contained in the implementing class, ie the rotate, translate and scale values.
-     * 
-     * @return Matrix with the data contained in the implementing class
-     */
-    public abstract float[] getMatrix();
-
-    /**
      * Creates a new, empty, matrix
      * 
      * @return
@@ -461,6 +454,19 @@ public abstract class Matrix extends VecMath {
         matrix[3] += x;
         matrix[7] += y;
         matrix[11] += z;
+    }
+
+    /**
+     * Sets the translation to the specified values
+     * 
+     * @param matrix
+     * @param translate
+     */
+    public final static void setTranslate(float[] matrix, float[] translate) {
+        matrix[3] = translate[0];
+        matrix[7] = translate[1];
+        matrix[11] = translate[2];
+
     }
 
     /**
