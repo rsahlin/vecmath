@@ -129,6 +129,17 @@ public final class Transform extends Matrix {
     }
 
     /**
+     * Reads the scale into result array.
+     * 
+     * @param result
+     */
+    public void getScale(float[] result) {
+        result[0] = scale[0];
+        result[1] = scale[1];
+        result[2] = scale[2];
+    }
+
+    /**
      * Checks if the limiter is set (not null), if so the values are checked to be in limit
      * 
      * @param values

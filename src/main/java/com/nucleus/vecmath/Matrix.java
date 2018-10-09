@@ -43,6 +43,17 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
+     * Creates a new matrix with values copied from the source matrix
+     * 
+     * @param source
+     * @return
+     */
+    public final static float[] createMatrix(float[] source) {
+        float[] matrix = createMatrix();
+        return copy(source, 0, matrix, 0);
+    }
+
+    /**
      * Sets the matrix to identity.
      * 
      * @param matrix The matrix
@@ -481,13 +492,30 @@ public abstract class Matrix extends VecMath {
         }
     }
 
+    /**
+     * 
+     * @param m
+     * @param axisAngle
+     */
     public static void rotateM(float[] m, AxisAngle axisAngle) {
         if (axisAngle != null) {
             // TODO - should a check be made for 0 values in X,Y,Z axis which results in NaN?
-            float[] values = axisAngle.axisAngle;
-            setRotateM(temp, 0, values[AxisAngle.ANGLE], values[AxisAngle.X], values[AxisAngle.Y], values[AxisAngle.Z]);
+            rotateM(m, axisAngle.axisAngle);
+        }
+    }
+
+    /**
+     * 
+     * @param m
+     * @param rotation
+     */
+    public static void rotateM(float[] m, float[] rotation) {
+        if (rotation != null) {
+            setRotateM(temp, 0, rotation[AxisAngle.ANGLE], rotation[AxisAngle.X], rotation[AxisAngle.Y],
+                    rotation[AxisAngle.Z]);
             mul4(m, temp, result);
             System.arraycopy(result, 0, m, 0, 16);
+
         }
     }
 

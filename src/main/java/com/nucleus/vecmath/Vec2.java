@@ -16,6 +16,20 @@ public final class Vec2 extends VecMath {
     }
 
     /**
+     * Creates a 2D vector by normalizing the x and y values the length as the
+     * magnitude.
+     * 
+     * @param x
+     * @param y
+     */
+    public Vec2(float x, float y) {
+        float length = length(x, y);
+        vector[X] = x / length;
+        vector[Y] = y / length;
+        vector[MAGNITUDE] = length;
+    }
+
+    /**
      * Creates a new 2 vector from p1 to p2, vector will not be normalized.
      * 
      * @param p1
