@@ -2,12 +2,9 @@ package com.nucleus.vecmath;
 
 /**
  * This class is NOT thread safe since it uses static temp float arrays
- * 4 x 4 matrix laid out contiguously in memory, translation component is at the 3rd, 7th, and 11th element
- * Left handed coordinate system
+ * 4 x 4 matrix laid out contiguously in memory, translation component is at the 3rd, 7th, and 11th element (row-major)
+ * Left handed coordinate system using row-major representation.
  * Use this for classes that can represent the data as a matrix, for instance a scale or translation
- * 
- * Matrices are 4 x 4 column-vector matrices stored in column-major
- * order:
  * 
  * @author Richard Sahlin
  *
@@ -197,13 +194,11 @@ public abstract class Matrix extends VecMath {
      * @param mInvOffset an offset into mInv where the inverted matrix is
      * stored.
      * @param m the input array
-     * @param mOffset an offset into m where the matrix is stored.
+     * @param mOffset an offset into m where the matrix is read.
      * @return true if the matrix could be inverted, false if it could not.
      */
-    public static boolean invertM(float[] mInv, int mInvOffset, float[] m,
-            int mOffset) {
+    public static boolean invertM(float[] mInv, int mInvOffset, float[] m, int mOffset) {
         // Invert a 4 x 4 matrix using Cramer's Rule
-
         // array of transpose source matrix
         float[] src = new float[16];
 
@@ -285,14 +280,12 @@ public abstract class Matrix extends VecMath {
                 * dst[3];
 
         if (det == 0.0f) {
-
+            return false;
         }
-
         // calculate matrix inverse
         det = 1 / det;
         for (int j = 0; j < 16; j++)
             mInv[j + mInvOffset] = dst[j] * det;
-
         return true;
     }
 
@@ -670,6 +663,45 @@ public abstract class Matrix extends VecMath {
         result[0] = (float) Math.sqrt(matrix[0] * matrix[0] + matrix[4] * matrix[4] + matrix[8] * matrix[8]);
         result[1] = (float) Math.sqrt(matrix[1] * matrix[1] + matrix[5] * matrix[5] + matrix[9] * matrix[9]);
         result[2] = (float) Math.sqrt(matrix[2] * matrix[2] + matrix[6] * matrix[6] + matrix[10] * matrix[10]);
+    }
+
+    /**
+     * Sets the given matrix to the rotation of the quaternion.
+     * 
+     * @param quaternion
+     * @param matrix
+     * @return The matrix with rotation set from quaternion, only rotation values changed.
+     */
+    public final static float[] setQuaternaionRotation(float[] quaternion, float[] matrix) {
+
+        float norm = quaternion[0] * quaternion[0] + quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]
+                + quaternion[3] * quaternion[3];
+        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+        float xs = quaternion[0] * s;
+        float ys = quaternion[1] * s;
+        float zs = quaternion[2] * s;
+        float xx = quaternion[0] * xs;
+        float xy = quaternion[0] * ys;
+        float xz = quaternion[0] * zs;
+        float xw = quaternion[3] * xs;
+        float yy = quaternion[1] * ys;
+        float yz = quaternion[1] * zs;
+        float yw = quaternion[3] * ys;
+        float zz = quaternion[2] * zs;
+        float zw = quaternion[3] * zs;
+
+        // using s=2/norm (instead of 1/norm) saves 9 multiplications by 2 here
+        matrix[0] = 1 - (yy + zz);
+        matrix[1] = (xy - zw);
+        matrix[2] = (xz + yw);
+        matrix[4] = (xy + zw);
+        matrix[5] = 1 - (xx + zz);
+        matrix[6] = (yz - xw);
+        matrix[8] = (xz - yw);
+        matrix[9] = (yz + xw);
+        matrix[10] = 1 - (xx + yy);
+
+        return result;
     }
 
 }
