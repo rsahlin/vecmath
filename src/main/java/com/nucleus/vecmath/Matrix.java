@@ -690,7 +690,6 @@ public abstract class Matrix extends VecMath {
         float zz = quaternion[2] * zs;
         float zw = quaternion[3] * zs;
 
-        // using s=2/norm (instead of 1/norm) saves 9 multiplications by 2 here
         matrix[0] = 1 - (yy + zz);
         matrix[1] = (xy - zw);
         matrix[2] = (xz + yw);
