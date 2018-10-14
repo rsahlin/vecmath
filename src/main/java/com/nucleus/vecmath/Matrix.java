@@ -673,33 +673,33 @@ public abstract class Matrix extends VecMath {
      * @return The matrix with rotation set from quaternion, only rotation values changed.
      */
     public final static float[] setQuaternaionRotation(float[] quaternion, float[] matrix) {
+        if (quaternion != null) {
+            float norm = quaternion[0] * quaternion[0] + quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]
+                    + quaternion[3] * quaternion[3];
+            float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+            float xs = quaternion[0] * s;
+            float ys = quaternion[1] * s;
+            float zs = quaternion[2] * s;
+            float xx = quaternion[0] * xs;
+            float xy = quaternion[0] * ys;
+            float xz = quaternion[0] * zs;
+            float xw = quaternion[3] * xs;
+            float yy = quaternion[1] * ys;
+            float yz = quaternion[1] * zs;
+            float yw = quaternion[3] * ys;
+            float zz = quaternion[2] * zs;
+            float zw = quaternion[3] * zs;
 
-        float norm = quaternion[0] * quaternion[0] + quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]
-                + quaternion[3] * quaternion[3];
-        float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
-        float xs = quaternion[0] * s;
-        float ys = quaternion[1] * s;
-        float zs = quaternion[2] * s;
-        float xx = quaternion[0] * xs;
-        float xy = quaternion[0] * ys;
-        float xz = quaternion[0] * zs;
-        float xw = quaternion[3] * xs;
-        float yy = quaternion[1] * ys;
-        float yz = quaternion[1] * zs;
-        float yw = quaternion[3] * ys;
-        float zz = quaternion[2] * zs;
-        float zw = quaternion[3] * zs;
-
-        matrix[0] = 1 - (yy + zz);
-        matrix[1] = (xy - zw);
-        matrix[2] = (xz + yw);
-        matrix[4] = (xy + zw);
-        matrix[5] = 1 - (xx + zz);
-        matrix[6] = (yz - xw);
-        matrix[8] = (xz - yw);
-        matrix[9] = (yz + xw);
-        matrix[10] = 1 - (xx + yy);
-
+            matrix[0] = 1 - (yy + zz);
+            matrix[1] = (xy - zw);
+            matrix[2] = (xz + yw);
+            matrix[4] = (xy + zw);
+            matrix[5] = 1 - (xx + zz);
+            matrix[6] = (yz - xw);
+            matrix[8] = (xz - yw);
+            matrix[9] = (yz + xw);
+            matrix[10] = 1 - (xx + yy);
+        }
         return result;
     }
 
