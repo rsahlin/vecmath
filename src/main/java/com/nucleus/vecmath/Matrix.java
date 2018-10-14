@@ -672,7 +672,7 @@ public abstract class Matrix extends VecMath {
      * @param matrix
      * @return The matrix with rotation set from quaternion, only rotation values changed.
      */
-    public final static float[] setQuaternaionRotation(float[] quaternion, float[] matrix) {
+    public final static float[] setQuaternionRotation(float[] quaternion, float[] matrix) {
         if (quaternion != null) {
             float norm = quaternion[0] * quaternion[0] + quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]
                     + quaternion[3] * quaternion[3];
