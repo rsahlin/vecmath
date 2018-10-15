@@ -447,7 +447,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Translate the matrix, OpenGL row wise, along x,y and z axis - row major
+     * Translate the matrix, OpenGL row wise, along x,y and z axis - row major, translation is stored at index 3,7,11
      * 
      * @param matrix
      * @param x
@@ -461,7 +461,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Sets the translation to the specified values
+     * Sets the translation to the specified values - row major, translation is stored at index 3,7,11
      * 
      * @param matrix
      * @param translate
@@ -470,11 +470,11 @@ public abstract class Matrix extends VecMath {
         matrix[3] = translate[0];
         matrix[7] = translate[1];
         matrix[11] = translate[2];
-
     }
 
     /**
-     * Translate the matrix, OpenGL row wise, along x,y and z axis
+     * Translate the matrix, OpenGL row wise, along x,y and z axis. Using row major, translation is stored at index
+     * 3,7,11
      * 
      * @param matrix
      * @param translate
