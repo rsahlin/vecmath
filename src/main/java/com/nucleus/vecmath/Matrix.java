@@ -188,6 +188,19 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
+     * Multiplies a vec3 with matrix - ie translation will not be included
+     * 
+     * @param matrix
+     * @param vec3
+     * @param destVec3
+     */
+    public final static void mulVec3(float[] matrix, float[] vec3, float[] destVec3) {
+        destVec3[0] = vec3[0] * matrix[0] + vec3[1] * matrix[1] + vec3[2] * matrix[2];
+        destVec3[1] = vec3[0] * matrix[4] + vec3[1] * matrix[5] + vec3[2] * matrix[6];
+        destVec3[2] = vec3[0] * matrix[8] + vec3[1] * matrix[9] + vec3[2] * matrix[10];
+    }
+
+    /**
      * Inverts a 4 x 4 matrix.
      *
      * @param mInv the array that holds the output inverted matrix
