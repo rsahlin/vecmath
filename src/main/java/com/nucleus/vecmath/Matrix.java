@@ -137,6 +137,30 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
+     * Multiply a number of 3 element vector with a matrix, the resultvectors will be transformed using the matrix
+     * and stored sequentially
+     * 
+     * @param matrix
+     * @param offset Offset in matrix array where matrix starts
+     * @param vec
+     * @param resultVec The output vector, this may not be the same as vec
+     * @param count Number of vectors to transform
+     */
+    public final static void transformVec3(float[] matrix, int offset, float[] vec, float[] resultVec, int count) {
+        int output = 0;
+        int input = 0;
+        for (int i = 0; i < count; i++) {
+            resultVec[output++] = matrix[offset] * vec[input] + matrix[offset + 1] * vec[input + 1]
+                    + matrix[offset + 2] * vec[input + 2];
+            resultVec[output++] = matrix[offset + 4] * vec[input] + matrix[offset + 5] * vec[input + 1]
+                    + matrix[offset + 6] * vec[input + 2];
+            resultVec[output++] = matrix[offset + 8] * vec[input] + matrix[offset + 9] * vec[input + 1]
+                    + matrix[offset + 10] * vec[input + 3];
+            input += 3;
+        }
+    }
+
+    /**
      * Transposes a 4 x 4 matrix.
      *
      * @param mTrans the array that holds the output inverted matrix

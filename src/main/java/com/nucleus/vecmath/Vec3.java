@@ -602,6 +602,20 @@ public class Vec3 extends VecMath {
         dest[destIndex++] = src[srcIndex++];
     }
 
+    /**
+     * Sets the x, y and z
+     * 
+     * @param destination
+     * @param x
+     * @param y
+     * @param z
+     */
+    public final static void set(float[] destination, float x, float y, float z) {
+        destination[0] = x;
+        destination[1] = y;
+        destination[2] = z;
+    }
+
     public final static float[] subtract(float[] v1, int v1Index, float[] v2, int v2Index) {
         float[] result = new float[3];
         result[0] = v2[v1Index++] - v1[v2Index++];
