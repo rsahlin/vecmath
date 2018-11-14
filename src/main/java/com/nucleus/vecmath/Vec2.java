@@ -219,4 +219,20 @@ public final class Vec2 extends VecMath {
         return (vector[X] * vector[MAGNITUDE]) / getLength();
     }
 
+    /**
+     * Creates a vector from pos1 to pos2 (subtracting pos2 from pos1) and storing the result in resultVec
+     * Result is not unit vector (not normalized)
+     * @param pos1 Start pos of vector
+     * @param index1
+     * @param pos2 End pos of vector
+     * @param index2
+     * @param resultVec pos2 - pos1
+     * @param resultIndex
+     */
+    public final static void toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec, int resultIndex) {
+        resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
+        resultVec[resultIndex] = pos2[index2] - pos1[index1];
+    }
+    
+    
 }

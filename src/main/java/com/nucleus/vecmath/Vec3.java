@@ -616,14 +616,22 @@ public class Vec3 extends VecMath {
         destination[2] = z;
     }
 
-    public final static float[] subtract(float[] v1, int v1Index, float[] v2, int v2Index) {
-        float[] result = new float[3];
-        result[0] = v2[v1Index++] - v1[v2Index++];
-        result[1] = v2[v1Index++] - v1[v2Index++];
-        result[2] = v2[v1Index] - v1[v2Index];
-        return result;
+    /**
+     * Creates a vector from pos1 to pos2 (subtracting pos2 from pos1) and storing the result in resultVec
+     * Result is not unit vector (not normalized)
+     * @param pos1 Start pos of vector
+     * @param index1
+     * @param pos2 End pos of vector
+     * @param index2
+     * @param resultVec pos2 - pos1
+     * @param resultIndex
+     */
+    public final static void toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec, int resultIndex) {
+        resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
+        resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
+        resultVec[resultIndex] = pos2[index2] - pos1[index1];
     }
-
+    
     /**
      * Returns the cross product vector from vector1 and vector2
      * cx = ay * bz − az * by
@@ -641,4 +649,35 @@ public class Vec3 extends VecMath {
         data[dest + Z] = data[v1 + X] * data[v2 + Y] - data[v1 + Y] * data[v2 + X];
     }
 
+    /**
+     * Subtract the vector s from m and store in r
+     * 
+     * @param m
+     * @param mIndex
+     * @param s
+     * @param sIndex
+     * @param r
+     * @param rIndex
+     */
+    public final static void subtract(float[] m, int mIndex, float[] s, int sIndex, float[] r, int rIndex) {
+        r[rIndex++] = m[mIndex++] - s[sIndex++];
+        r[rIndex++] = m[mIndex++] - s[sIndex++];
+        r[rIndex] = m[mIndex] - s[sIndex];
+    }
+
+    /**
+     * Multiply the vec by a scalar and store in result
+     * 
+     * @param vec
+     * @param vIndex
+     * @param scalar
+     * @param result
+     * @param rIndex
+     */
+    public final static void mul(float[] vec, int vIndex, float scalar, float[] result, int rIndex) {
+        result[rIndex++] = vec[vIndex++] * scalar;
+        result[rIndex++] = vec[vIndex++] * scalar;
+        result[rIndex] = vec[vIndex] * scalar;
+    }
+    
 }
