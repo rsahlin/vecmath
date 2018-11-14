@@ -527,13 +527,17 @@ public class Vec3 extends VecMath {
      * Adds the contents of vector1 and vector2 and stores in result.
      * 
      * @param vector1
+     * @param v1Index
      * @param vector2
-     * @param result vector1 + vector2
+     * @param v2Index
+     * @param result
+     * @param rIndex
      */
-    public final static void add(float[] vector1, float[] vector2, float[] result) {
-        result[0] = vector1[0] + vector2[0];
-        result[1] = vector1[1] + vector2[1];
-        result[2] = vector1[2] + vector2[2];
+    public final static void add(float[] vector1, int v1Index, float[] vector2, int v2Index, float[] result,
+            int rIndex) {
+        result[rIndex++] = vector1[v1Index++] + vector2[v2Index++];
+        result[rIndex++] = vector1[v1Index++] + vector2[v2Index++];
+        result[rIndex] = vector1[v1Index] + vector2[v2Index];
     }
 
     /**
@@ -619,6 +623,7 @@ public class Vec3 extends VecMath {
     /**
      * Creates a vector from pos1 to pos2 (subtracting pos2 from pos1) and storing the result in resultVec
      * Result is not unit vector (not normalized)
+     * 
      * @param pos1 Start pos of vector
      * @param index1
      * @param pos2 End pos of vector
@@ -626,12 +631,13 @@ public class Vec3 extends VecMath {
      * @param resultVec pos2 - pos1
      * @param resultIndex
      */
-    public final static void toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec, int resultIndex) {
+    public final static void toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec,
+            int resultIndex) {
         resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
         resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
         resultVec[resultIndex] = pos2[index2] - pos1[index1];
     }
-    
+
     /**
      * Returns the cross product vector from vector1 and vector2
      * cx = ay * bz − az * by
@@ -679,5 +685,17 @@ public class Vec3 extends VecMath {
         result[rIndex++] = vec[vIndex++] * scalar;
         result[rIndex] = vec[vIndex] * scalar;
     }
-    
+
+    /**
+     * Copies the source vector to destination.
+     * 
+     * @param source
+     * @param sIndex
+     * @param dest
+     * @param dIndex
+     */
+    public final static void copy(float[] source, int sIndex, float[] dest, int dIndex) {
+        System.arraycopy(source, sIndex, dest, dIndex, 3);
+    }
+
 }
