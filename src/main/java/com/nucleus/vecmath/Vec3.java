@@ -170,17 +170,21 @@ public class Vec3 extends VecMath {
      * y = ay / |a| z = az / |a|
      */
     public Vec3 normalize() {
-        float len = (float) Math
-                .sqrt((values[X] * values[X])
-                        + (values[Y] * values[Y])
-                        + (values[Z] * values[Z]));
-        values[X] = values[X] / len;
-        values[Y] = values[Y] / len;
-        values[Z] = values[Z] / len;
-
+        normalize(values, 0);
         return this;
     }
 
+    public static final void normalize(float[] values, int index) {
+        float len = (float) Math
+                .sqrt((values[index + X] * values[index + X])
+                        + (values[index + Y] * values[index + Y])
+                        + (values[index + Z] * values[index + Z]));
+        values[index + X] = values[index + X] / len;
+        values[index + Y] = values[index + Y] / len;
+        values[index + Z] = values[index + Z] / len;
+    }
+    
+    
     /**
      * Normalize 2D vector in the specified array, storing back the result.
      * 
