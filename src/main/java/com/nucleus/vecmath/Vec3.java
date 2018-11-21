@@ -6,7 +6,7 @@ package com.nucleus.vecmath;
  * @author Richard Sahlin
  *
  */
-public class Vector3D extends VecMath {
+public class Vec3 extends VecMath {
 
     /**
      * The float Vector values.
@@ -18,7 +18,7 @@ public class Vector3D extends VecMath {
      * 
      * @return
      */
-    public Vector3D negate() {
+    public Vec3 negate() {
         values[0] = -values[0];
         values[1] = -values[1];
         values[2] = -values[2];
@@ -32,7 +32,7 @@ public class Vector3D extends VecMath {
      * @param y
      * @param z
      */
-    public Vector3D(float x, float y, float z) {
+    public Vec3(float x, float y, float z) {
         set(x, y, z);
     }
 
@@ -41,7 +41,7 @@ public class Vector3D extends VecMath {
      * 
      * @param other
      */
-    public void halfway(Vector3D other) {
+    public void halfway(Vec3 other) {
         add(other);
         values[0] = values[0] / 2;
         values[1] = values[1] / 2;
@@ -51,42 +51,46 @@ public class Vector3D extends VecMath {
 
     /**
      * Construct a Vector from the specified origin and endpoint.
+     * 
      * @param origin
      * @param endpoint
      */
-    public Vector3D(float[] origin, float[] endpoint) {
+    public Vec3(float[] origin, float[] endpoint) {
         set(origin, endpoint);
     }
 
     /**
      * Constructor with array of float as parameter.
+     * 
      * @param values
      * @throws IllegalArgumentException If values is null or
      * there is not enough values in the values array, must be at least 3
      */
-    public Vector3D(float[] values) {
+    public Vec3(float[] values) {
         set(values, 0);
     }
 
     /**
      * Constructor with array and index as parameter, copy the values from the
      * specified index to a Vector3.
+     * 
      * @param values Array containing values.
      * @param index Index into the values array where values are read.
      * @throws IllegalArgumentException If values is null or
      * there is not enough values in the values array, must be at least index + 3
      */
-    public Vector3D(float[] values, int index) {
+    public Vec3(float[] values, int index) {
         set(values, index);
 
     }
 
     /**
      * Constructor with Vector3 as source.
+     * 
      * @param source
      * @throws IllegalArgumentException If source is null
      */
-    public Vector3D(Vector3D source) {
+    public Vec3(Vec3 source) {
         if (source == null) {
             throw new IllegalArgumentException("Source vector is null");
         }
@@ -114,7 +118,7 @@ public class Vector3D extends VecMath {
      * @param source
      * @throws IllegalArgumentException If source is null.
      */
-    public Vector3D set(Vector3D source) {
+    public Vec3 set(Vec3 source) {
         if (source == null) {
             throw new IllegalArgumentException("Source vector is null");
         }
@@ -165,18 +169,22 @@ public class Vector3D extends VecMath {
      * Normalize to unit length |a| = sqrt( (x*x) + (y*y) + (z*z) ) x = ax / |a|
      * y = ay / |a| z = az / |a|
      */
-    public Vector3D normalize() {
-        float len = (float) Math
-                .sqrt((values[X] * values[X])
-                        + (values[Y] * values[Y])
-                        + (values[Z] * values[Z]));
-        values[X] = values[X] / len;
-        values[Y] = values[Y] / len;
-        values[Z] = values[Z] / len;
-
+    public Vec3 normalize() {
+        normalize(values, 0);
         return this;
     }
 
+    public static final void normalize(float[] values, int index) {
+        float len = (float) Math
+                .sqrt((values[index + X] * values[index + X])
+                        + (values[index + Y] * values[index + Y])
+                        + (values[index + Z] * values[index + Z]));
+        values[index + X] = values[index + X] / len;
+        values[index + Y] = values[index + Y] / len;
+        values[index + Z] = values[index + Z] / len;
+    }
+    
+    
     /**
      * Normalize 2D vector in the specified array, storing back the result.
      * 
@@ -257,6 +265,50 @@ public class Vector3D extends VecMath {
     }
 
     /**
+     * returns ax * bx + ay * by
+     * 
+     * @param vec1
+     * @param vec2
+     * @return ax * bx + ay * by
+     */
+    public static float dotZAxis(Vec3 vec1, Vec3 vec2) {
+        return vec1.values[0] * vec2.values[0] + vec1.values[1] * vec2.values[1];
+    }
+
+    /**
+     * Returns ay * by + az * bz
+     * 
+     * @param vec1
+     * @param vec2
+     * @return ay * by + az * bz
+     */
+    public static float dotXAxis(Vec3 vec1, Vec3 vec2) {
+        return vec1.values[1] * vec2.values[1] + vec1.values[2] * vec2.values[2];
+    }
+
+    /**
+     * returns ax * by − ay * bx
+     * 
+     * @param vec1
+     * @param vec2
+     * @return
+     */
+    public static float crossZAxis(Vec3 vec1, Vec3 vec2) {
+        return vec1.values[0] * vec2.values[1] - vec1.values[1] * vec2.values[0];
+    }
+
+    /**
+     * returns ay * bz - az * by
+     * 
+     * @param vec1
+     * @param vec2
+     * @return
+     */
+    public static float crossXAxis(Vec3 vec1, Vec3 vec2) {
+        return vec1.values[1] * vec2.values[2] - vec1.values[2] * vec2.values[1];
+    }
+
+    /**
      * Calculate the cross product (direction of the plane defined by this
      * vector and v2). The result will be the surface 'normal' (not normalized),
      * stored in this vector.
@@ -283,7 +335,7 @@ public class Vector3D extends VecMath {
      * @param endpoint1
      * @param endpoint2
      */
-    public void cross(float[] origin, float[] endpoint1, float[] endpoint2) {
+    public void crossFromPoints(float[] origin, float[] endpoint1, float[] endpoint2) {
         values[0] = (endpoint1[1] - origin[1]) * (endpoint2[2] - origin[2])
                 - (endpoint1[2] - origin[2]) * (endpoint2[1] - origin[1]);
         values[1] = (endpoint1[2] - origin[2]) * (endpoint2[0] - origin[0])
@@ -293,11 +345,26 @@ public class Vector3D extends VecMath {
     }
 
     /**
+     * Calculates the cross product of vec1 X vec2 and stores in result
+     * 
+     * @param vec1
+     * @param vec2
+     * @param result
+     * @return The result array
+     */
+    public static float[] cross(float[] vec1, float[] vec2, float[] result) {
+        result[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
+        result[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
+        result[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
+        return result;
+    }
+
+    /**
      * Add the specified Vector to this Vector.
      *
      * @param add The Vector to add.
      */
-    public Vector3D add(Vector3D add) {
+    public Vec3 add(Vec3 add) {
         values[0] += add.values[0];
         values[1] += add.values[1];
         values[2] += add.values[2];
@@ -338,7 +405,7 @@ public class Vector3D extends VecMath {
      *
      * @param sub The Vector to subtract.
      */
-    public void sub(Vector3D sub) {
+    public void sub(Vec3 sub) {
         values[0] -= sub.values[0];
         values[1] -= sub.values[1];
         values[2] -= sub.values[2];
@@ -428,7 +495,7 @@ public class Vector3D extends VecMath {
      * @param angle
      */
     public final static void rotateZAxis(float[] vector, float angle) {
-        Vector3D.rotateZAxis(vector, 0, angle);
+        Vec3.rotateZAxis(vector, 0, angle);
     }
 
     /**
@@ -464,13 +531,17 @@ public class Vector3D extends VecMath {
      * Adds the contents of vector1 and vector2 and stores in result.
      * 
      * @param vector1
+     * @param v1Index
      * @param vector2
-     * @param result vector1 + vector2
+     * @param v2Index
+     * @param result
+     * @param rIndex
      */
-    public final static void add(float[] vector1, float[] vector2, float[] result) {
-        result[0] = vector1[0] + vector2[0];
-        result[1] = vector1[1] + vector2[1];
-        result[2] = vector1[2] + vector2[2];
+    public final static void add(float[] vector1, int v1Index, float[] vector2, int v2Index, float[] result,
+            int rIndex) {
+        result[rIndex++] = vector1[v1Index++] + vector2[v2Index++];
+        result[rIndex++] = vector1[v1Index++] + vector2[v2Index++];
+        result[rIndex] = vector1[v1Index] + vector2[v2Index];
     }
 
     /**
@@ -539,12 +610,36 @@ public class Vector3D extends VecMath {
         dest[destIndex++] = src[srcIndex++];
     }
 
-    public final static float[] subtract(float[] v1, int v1Index, float[] v2, int v2Index) {
-        float[] result = new float[3];
-        result[0] = v2[v1Index++] - v1[v2Index++];
-        result[1] = v2[v1Index++] - v1[v2Index++];
-        result[2] = v2[v1Index] - v1[v2Index];
-        return result;
+    /**
+     * Sets the x, y and z
+     * 
+     * @param destination
+     * @param x
+     * @param y
+     * @param z
+     */
+    public final static void set(float[] destination, float x, float y, float z) {
+        destination[0] = x;
+        destination[1] = y;
+        destination[2] = z;
+    }
+
+    /**
+     * Creates a vector from pos1 to pos2 (subtracting pos2 from pos1) and storing the result in resultVec
+     * Result is not unit vector (not normalized)
+     * 
+     * @param pos1 Start pos of vector
+     * @param index1
+     * @param pos2 End pos of vector
+     * @param index2
+     * @param resultVec pos2 - pos1
+     * @param resultIndex
+     */
+    public final static void toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec,
+            int resultIndex) {
+        resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
+        resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
+        resultVec[resultIndex] = pos2[index2] - pos1[index1];
     }
 
     /**
@@ -562,6 +657,49 @@ public class Vector3D extends VecMath {
         data[dest + X] = data[v1 + Y] * data[v2 + Z] - data[v1 + Z] * data[v2 + Y];
         data[dest + Y] = data[v1 + Z] * data[v2 + X] - data[v1 + X] * data[v2 + Z];
         data[dest + Z] = data[v1 + X] * data[v2 + Y] - data[v1 + Y] * data[v2 + X];
+    }
+
+    /**
+     * Subtract the vector s from m and store in r
+     * 
+     * @param m
+     * @param mIndex
+     * @param s
+     * @param sIndex
+     * @param r
+     * @param rIndex
+     */
+    public final static void subtract(float[] m, int mIndex, float[] s, int sIndex, float[] r, int rIndex) {
+        r[rIndex++] = m[mIndex++] - s[sIndex++];
+        r[rIndex++] = m[mIndex++] - s[sIndex++];
+        r[rIndex] = m[mIndex] - s[sIndex];
+    }
+
+    /**
+     * Multiply the vec by a scalar and store in result
+     * 
+     * @param vec
+     * @param vIndex
+     * @param scalar
+     * @param result
+     * @param rIndex
+     */
+    public final static void mul(float[] vec, int vIndex, float scalar, float[] result, int rIndex) {
+        result[rIndex++] = vec[vIndex++] * scalar;
+        result[rIndex++] = vec[vIndex++] * scalar;
+        result[rIndex] = vec[vIndex] * scalar;
+    }
+
+    /**
+     * Copies the source vector to destination.
+     * 
+     * @param source
+     * @param sIndex
+     * @param dest
+     * @param dIndex
+     */
+    public final static void copy(float[] source, int sIndex, float[] dest, int dIndex) {
+        System.arraycopy(source, sIndex, dest, dIndex, 3);
     }
 
 }

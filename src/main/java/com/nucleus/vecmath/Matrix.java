@@ -2,12 +2,9 @@ package com.nucleus.vecmath;
 
 /**
  * This class is NOT thread safe since it uses static temp float arrays
- * 4 x 4 matrix laid out contiguously in memory, translation component is at the 3rd, 7th, and 11th element
- * Left handed coordinate system
+ * 4 x 4 matrix laid out contiguously in memory, translation component is at the 3rd, 7th, and 11th element (row-major)
+ * Left handed coordinate system using row-major representation.
  * Use this for classes that can represent the data as a matrix, for instance a scale or translation
- * 
- * Matrices are 4 x 4 column-vector matrices stored in column-major
- * order:
  * 
  * @author Richard Sahlin
  *
@@ -34,19 +31,23 @@ public abstract class Matrix extends VecMath {
     private static float[] result = new float[16];
 
     /**
-     * Returns a matrix with the values contained in the implementing class, ie the rotate, translate and scale values.
-     * 
-     * @return Matrix with the data contained in the implementing class
-     */
-    public abstract float[] getMatrix();
-
-    /**
      * Creates a new, empty, matrix
      * 
      * @return
      */
     public final static float[] createMatrix() {
         return new float[MATRIX_ELEMENTS];
+    }
+
+    /**
+     * Creates a new matrix with values copied from the source matrix
+     * 
+     * @param source
+     * @return
+     */
+    public final static float[] createMatrix(float[] source) {
+        float[] matrix = createMatrix();
+        return copy(source, 0, matrix, 0);
     }
 
     /**
@@ -136,6 +137,30 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
+     * Multiply a number of 3 element vector with a matrix, the resultvectors will be transformed using the matrix
+     * and stored sequentially
+     * 
+     * @param matrix
+     * @param offset Offset in matrix array where matrix starts
+     * @param vec
+     * @param resultVec The output vector, this may not be the same as vec
+     * @param count Number of vectors to transform
+     */
+    public final static void transformVec3(float[] matrix, int offset, float[] vec, float[] resultVec, int count) {
+        int output = 0;
+        int input = 0;
+        for (int i = 0; i < count; i++) {
+            resultVec[output++] = matrix[offset] * vec[input] + matrix[offset + 1] * vec[input + 1]
+                    + matrix[offset + 2] * vec[input + 2];
+            resultVec[output++] = matrix[offset + 4] * vec[input] + matrix[offset + 5] * vec[input + 1]
+                    + matrix[offset + 6] * vec[input + 2];
+            resultVec[output++] = matrix[offset + 8] * vec[input] + matrix[offset + 9] * vec[input + 1]
+                    + matrix[offset + 10] * vec[input + 3];
+            input += 3;
+        }
+    }
+
+    /**
      * Transposes a 4 x 4 matrix.
      *
      * @param mTrans the array that holds the output inverted matrix
@@ -164,90 +189,39 @@ public abstract class Matrix extends VecMath {
      */
     public final static void mul4(float[] m1, float[] m2, float[] destination) {
         // Concatenate matrix 1 with matrix 2, 4*4
-        destination[0] = (m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2] + m1[12] * m2[3]);
-        destination[4] = (m1[0] * m2[4] + m1[4] * m2[5] + m1[8] * m2[6] + m1[12] * m2[7]);
-        destination[8] = (m1[0] * m2[8] + m1[4] * m2[9] + m1[8] * m2[10] + m1[12] * m2[11]);
-        destination[12] = (m1[0] * m2[12] + m1[4] * m2[13] + m1[8] * m2[14] + m1[12] * m2[15]);
+        destination[0] = (m1[0] * m2[0] + m1[1] * m2[4] + m1[2] * m2[8] + m1[3] * m2[12]);
+        destination[1] = (m1[0] * m2[1] + m1[1] * m2[5] + m1[2] * m2[9] + m1[3] * m2[13]);
+        destination[2] = (m1[0] * m2[2] + m1[1] * m2[6] + m1[2] * m2[10] + m1[3] * m2[14]);
+        destination[3] = (m1[0] * m2[3] + m1[1] * m2[7] + m1[2] * m2[11] + m1[3] * m2[15]);
 
-        destination[1] = (m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2] + m1[13] * m2[3]);
-        destination[5] = (m1[1] * m2[4] + m1[5] * m2[5] + m1[9] * m2[6] + m1[13] * m2[7]);
-        destination[9] = (m1[1] * m2[8] + m1[5] * m2[9] + m1[9] * m2[10] + m1[13] * m2[11]);
-        destination[13] = (m1[1] * m2[12] + m1[5] * m2[13] + m1[9] * m2[14] + m1[13] * m2[15]);
+        destination[4] = (m1[4] * m2[0] + m1[5] * m2[4] + m1[6] * m2[8] + m1[7] * m2[12]);
+        destination[5] = (m1[4] * m2[1] + m1[5] * m2[5] + m1[6] * m2[9] + m1[7] * m2[13]);
+        destination[6] = (m1[4] * m2[2] + m1[5] * m2[6] + m1[6] * m2[10] + m1[7] * m2[14]);
+        destination[7] = (m1[4] * m2[3] + m1[5] * m2[7] + m1[6] * m2[11] + m1[7] * m2[15]);
 
-        destination[2] = (m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2] + m1[14] * m2[3]);
-        destination[6] = (m1[2] * m2[4] + m1[6] * m2[5] + m1[10] * m2[6] + m1[14] * m2[7]);
-        destination[10] = (m1[2] * m2[8] + m1[6] * m2[9] + m1[10] * m2[10] + m1[14] * m2[11]);
-        destination[14] = (m1[2] * m2[12] + m1[6] * m2[13] + m1[10] * m2[14] + m1[14] * m2[15]);
+        destination[8] = (m1[8] * m2[0] + m1[9] * m2[4] + m1[10] * m2[8] + m1[11] * m2[12]);
+        destination[9] = (m1[8] * m2[1] + m1[9] * m2[5] + m1[10] * m2[9] + m1[11] * m2[13]);
+        destination[10] = (m1[8] * m2[2] + m1[9] * m2[6] + m1[10] * m2[10] + m1[11] * m2[14]);
+        destination[11] = (m1[8] * m2[3] + m1[9] * m2[7] + m1[10] * m2[11] + m1[11] * m2[15]);
 
-        destination[3] = (m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2] + m1[15] * m2[3]);
-        destination[7] = (m1[3] * m2[4] + m1[7] * m2[5] + m1[11] * m2[6] + m1[15] * m2[7]);
-        destination[11] = (m1[3] * m2[8] + m1[7] * m2[9] + m1[11] * m2[10] + m1[15] * m2[11]);
-        destination[15] = (m1[3] * m2[12] + m1[7] * m2[13] + m1[11] * m2[14] + m1[15] * m2[15]);
+        destination[12] = (m1[12] * m2[0] + m1[13] * m2[4] + m1[14] * m2[8] + m1[15] * m2[12]);
+        destination[13] = (m1[12] * m2[1] + m1[13] * m2[5] + m1[14] * m2[9] + m1[15] * m2[13]);
+        destination[14] = (m1[12] * m2[2] + m1[13] * m2[6] + m1[14] * m2[10] + m1[15] * m2[14]);
+        destination[15] = (m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15]);
 
     }
 
     /**
-     * Concatenate matrix with matrix2 and store the result in matrix
+     * Multiplies a vec3 with matrix - ie translation will not be included
      * 
-     * @param matrix Source 1 matrix - matrix1 * matrix2 stored here
-     * @param matrix2 Source 2 matrix
+     * @param matrix
+     * @param vec3
+     * @param destVec3
      */
-    public static void mul4(float[] matrix, float[] matrix2) {
-        float temp_float1, temp_float2, temp_float3, temp_float4;
-
-        // Concatenate this with matrix 2, 4*4
-        temp_float1 = (matrix[0] * matrix2[0] + matrix[1] * matrix2[4] + matrix[2] * matrix2[8] +
-                matrix[3] * matrix2[12]);
-        temp_float2 = (matrix[0] * matrix2[1] + matrix[1] * matrix2[5] + matrix[2] * matrix2[9] +
-                matrix[3] * matrix2[13]);
-        temp_float3 = (matrix[0] * matrix2[2] + matrix[1] * matrix2[6] + matrix[2] * matrix2[10] +
-                matrix[3] * matrix2[14]);
-        temp_float4 = (matrix[0] * matrix2[3] + matrix[1] * matrix2[7] + matrix[2] * matrix2[11] +
-                matrix[3] * matrix2[15]);
-        matrix[0] = temp_float1;
-        matrix[4] = temp_float2;
-        matrix[8] = temp_float3;
-        matrix[12] = temp_float4;
-
-        temp_float1 = (matrix[4] * matrix2[0] + matrix[5] * matrix2[4] + matrix[6] * matrix2[8] +
-                matrix[7] * matrix2[12]);
-        temp_float2 = (matrix[4] * matrix2[1] + matrix[5] * matrix2[5] + matrix[6] * matrix2[9] +
-                matrix[7] * matrix2[13]);
-        temp_float3 = (matrix[4] * matrix2[2] + matrix[5] * matrix2[6] + matrix[6] * matrix2[10] +
-                matrix[7] * matrix2[14]);
-        temp_float4 = (matrix[4] * matrix2[3] + matrix[5] * matrix2[7] + matrix[6] * matrix2[11] +
-                matrix[7] * matrix2[15]);
-        matrix[1] = temp_float1;
-        matrix[5] = temp_float2;
-        matrix[9] = temp_float3;
-        matrix[13] = temp_float4;
-
-        temp_float1 = (matrix[8] * matrix2[0] + matrix[9] * matrix2[4] + matrix[10] * matrix2[8] +
-                matrix[11] * matrix2[12]);
-        temp_float2 = (matrix[8] * matrix2[1] + matrix[9] * matrix2[5] + matrix[10] * matrix2[9] +
-                matrix[11] * matrix2[13]);
-        temp_float3 = (matrix[8] * matrix2[2] + matrix[9] * matrix2[6] + matrix[10] * matrix2[10] +
-                matrix[11] * matrix2[14]);
-        temp_float4 = (matrix[8] * matrix2[3] + matrix[9] * matrix2[7] + matrix[10] * matrix2[11] +
-                matrix[11] * matrix2[15]);
-        matrix[2] = temp_float1;
-        matrix[6] = temp_float2;
-        matrix[10] = temp_float3;
-        matrix[14] = temp_float4;
-
-        temp_float1 = (matrix[12] * matrix2[0] + matrix[13] * matrix2[4] + matrix[14] * matrix2[8] +
-                matrix[15] * matrix2[12]);
-        temp_float2 = (matrix[12] * matrix2[1] + matrix[13] * matrix2[5] + matrix[14] * matrix2[9] +
-                matrix[15] * matrix2[13]);
-        temp_float3 = (matrix[12] * matrix2[2] + matrix[13] * matrix2[6] + matrix[14] * matrix2[10]
-                + matrix[15] * matrix2[14]);
-        temp_float4 = (matrix[12] * matrix2[3] + matrix[13] * matrix2[7] + matrix[14] * matrix2[11]
-                + matrix[15] * matrix2[15]);
-        matrix[3] = temp_float1;
-        matrix[7] = temp_float2;
-        matrix[11] = temp_float3;
-        matrix[15] = temp_float4;
-
+    public final static void mulVec3(float[] matrix, float[] vec3, float[] destVec3) {
+        destVec3[0] = vec3[0] * matrix[0] + vec3[1] * matrix[1] + vec3[2] * matrix[2];
+        destVec3[1] = vec3[0] * matrix[4] + vec3[1] * matrix[5] + vec3[2] * matrix[6];
+        destVec3[2] = vec3[0] * matrix[8] + vec3[1] * matrix[9] + vec3[2] * matrix[10];
     }
 
     /**
@@ -257,13 +231,11 @@ public abstract class Matrix extends VecMath {
      * @param mInvOffset an offset into mInv where the inverted matrix is
      * stored.
      * @param m the input array
-     * @param mOffset an offset into m where the matrix is stored.
+     * @param mOffset an offset into m where the matrix is read.
      * @return true if the matrix could be inverted, false if it could not.
      */
-    public static boolean invertM(float[] mInv, int mInvOffset, float[] m,
-            int mOffset) {
+    public static boolean invertM(float[] mInv, int mInvOffset, float[] m, int mOffset) {
         // Invert a 4 x 4 matrix using Cramer's Rule
-
         // array of transpose source matrix
         float[] src = new float[16];
 
@@ -345,19 +317,17 @@ public abstract class Matrix extends VecMath {
                 * dst[3];
 
         if (det == 0.0f) {
-
+            return false;
         }
-
         // calculate matrix inverse
         det = 1 / det;
         for (int j = 0; j < 16; j++)
             mInv[j + mInvOffset] = dst[j] * det;
-
         return true;
     }
 
     /**
-     * Computes an orthographic projection matrix for a left handed coordinate system.
+     * Computes an orthographic projection matrix for a left handed coordinate system - row major
      *
      * @param m returns the result
      * @param mOffset
@@ -393,23 +363,23 @@ public abstract class Matrix extends VecMath {
         m[mOffset + 0] = x;
         m[mOffset + 5] = y;
         m[mOffset + 10] = z;
-        m[mOffset + 12] = tx;
-        m[mOffset + 13] = ty;
-        m[mOffset + 14] = tz;
+        m[mOffset + 3] = tx;
+        m[mOffset + 7] = ty;
+        m[mOffset + 11] = tz;
         m[mOffset + 15] = 1.0f;
         m[mOffset + 1] = 0.0f;
         m[mOffset + 2] = 0.0f;
-        m[mOffset + 3] = 0.0f;
         m[mOffset + 4] = 0.0f;
         m[mOffset + 6] = 0.0f;
-        m[mOffset + 7] = 0.0f;
         m[mOffset + 8] = 0.0f;
         m[mOffset + 9] = 0.0f;
-        m[mOffset + 11] = 0.0f;
+        m[mOffset + 12] = 0.0f;
+        m[mOffset + 13] = 0.0f;
+        m[mOffset + 14] = 0.0f;
     }
 
     /**
-     * Define a projection matrix in terms of six clip planes
+     * Define a projection matrix in terms of six clip planes - row major
      * 
      * @param m the float array that holds the perspective matrix
      * @param offset the offset into float array m where the perspective
@@ -451,19 +421,19 @@ public abstract class Matrix extends VecMath {
         final float D = 2.0f * (far * near * r_depth);
         m[offset + 0] = x;
         m[offset + 5] = y;
-        m[offset + 8] = A;
-        m[offset + 9] = B;
         m[offset + 10] = C;
-        m[offset + 14] = D;
-        m[offset + 11] = 1.0f;
+        m[offset + 2] = A;
+        m[offset + 6] = B;
+        m[offset + 11] = D;
         m[offset + 1] = 0.0f;
-        m[offset + 2] = 0.0f;
         m[offset + 3] = 0.0f;
         m[offset + 4] = 0.0f;
-        m[offset + 6] = 0.0f;
         m[offset + 7] = 0.0f;
+        m[offset + 8] = 0.0f;
+        m[offset + 9] = 0.0f;
         m[offset + 12] = 0.0f;
         m[offset + 13] = 0.0f;
+        m[offset + 14] = 1.0f;
         m[offset + 15] = 0.0f;
     }
 
@@ -495,7 +465,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Scales matrix m in place by sx, sy, and sz
+     * Scales matrix m in place by sx, sy, and sz - row major
      * 
      * @param m matrix to scale
      * @param mOffset index into m where the matrix starts
@@ -514,7 +484,7 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
-     * Translate the matrix, OpenGL row wise, along x,y and z axis
+     * Translate the matrix, OpenGL row wise, along x,y and z axis - row major, translation is stored at index 3,7,11
      * 
      * @param matrix
      * @param x
@@ -522,13 +492,26 @@ public abstract class Matrix extends VecMath {
      * @param z
      */
     public final static void translate(float[] matrix, float x, float y, float z) {
-        matrix[3] = x;
-        matrix[7] = y;
-        matrix[11] = z;
+        matrix[3] += x;
+        matrix[7] += y;
+        matrix[11] += z;
     }
 
     /**
-     * Translate the matrix, OpenGL row wise, along x,y and z axis
+     * Sets the translation to the specified values - row major, translation is stored at index 3,7,11
+     * 
+     * @param matrix
+     * @param translate
+     */
+    public final static void setTranslate(float[] matrix, float[] translate) {
+        matrix[3] = translate[0];
+        matrix[7] = translate[1];
+        matrix[11] = translate[2];
+    }
+
+    /**
+     * Translate the matrix, OpenGL row wise, along x,y and z axis. Using row major, translation is stored at index
+     * 3,7,11
      * 
      * @param matrix
      * @param translate
@@ -539,13 +522,30 @@ public abstract class Matrix extends VecMath {
         }
     }
 
+    /**
+     * 
+     * @param m
+     * @param axisAngle
+     */
     public static void rotateM(float[] m, AxisAngle axisAngle) {
         if (axisAngle != null) {
             // TODO - should a check be made for 0 values in X,Y,Z axis which results in NaN?
-            float[] values = axisAngle.axisAngle;
-            setRotateM(temp, 0, values[AxisAngle.ANGLE], values[AxisAngle.X], values[AxisAngle.Y], values[AxisAngle.Z]);
+            rotateM(m, axisAngle.axisAngle);
+        }
+    }
+
+    /**
+     * 
+     * @param m
+     * @param rotation
+     */
+    public static void rotateM(float[] m, float[] rotation) {
+        if (rotation != null) {
+            setRotateM(temp, 0, rotation[AxisAngle.ANGLE], rotation[AxisAngle.X], rotation[AxisAngle.Y],
+                    rotation[AxisAngle.Z]);
             mul4(m, temp, result);
             System.arraycopy(result, 0, m, 0, 16);
+
         }
     }
 
@@ -627,25 +627,71 @@ public abstract class Matrix extends VecMath {
         }
     }
 
-    public static void setRotateTo(float[] position, float[] matrix) {
-        Matrix.setIdentity(matrix, 0);
+    /**
+     * Sets the matrix to rotate to the 2D position - ie this rotates along Z axis so that the object
+     * is facing the 2D position.
+     * 
+     * @param position
+     * @param matrix The matrix to set rotation to - only affected values are set.
+     */
+    public static void setRotateZTo2D(float[] position, float[] matrix) {
 
-        // Since sin and cos are calculated by X axis rotation is 90 degrees ccw, swap to align with left handed
-        // coordinate system.
-        // TODO: Add axis direction as a parameter?
-        Vector2D vec = new Vector2D(new float[] { position[1], -position[0] });
-        vec.normalize();
-        float sz = vec.getSin();
-        float cz = vec.getCos();
-        matrix[0] = cz;
-        matrix[1] = -sz;
+        Vec3 vec1 = new Vec3(0, 1, 0);
+        Vec3 vec2 = new Vec3(position[0], position[1], 0);
+        vec2.normalize();
 
-        matrix[4] = sz;
-        matrix[5] = cz;
+        float cosZ = Vec3.dotZAxis(vec1, vec2);
+        float sinZ = Vec3.crossZAxis(vec1, vec2);
+        if (cosZ == 0f && sinZ == 0f) {
+            cosZ = 1;
+        }
+
+        matrix[0] = cosZ;
+        matrix[1] = -sinZ;
+
+        matrix[4] = sinZ;
+        matrix[5] = cosZ;
     }
 
     /**
-     * Exctract the scale from the given matrix
+     * Sets the matrix to rotate to the 3D position
+     * Work in progress - not done yet
+     * 
+     * @param position
+     * @param matrix The matrix to set rotation to - only affected values are set.
+     */
+    public static void setRotateTo3D(float[] position, float[] matrix) {
+
+        Vec3 vec1 = new Vec3(0, 1, 0);
+        Vec3 vec2 = new Vec3(position);
+        vec2.normalize();
+
+        float cosZ = Vec3.dotZAxis(vec1, vec2);
+        float sinZ = Vec3.crossZAxis(vec1, vec2);
+        if (cosZ == 0f && sinZ == 0f) {
+            cosZ = 1;
+        }
+        vec1.values[1] = 0;
+        vec1.values[2] = 1;
+        float cosX = Vec3.dotXAxis(vec1, vec2);
+        float sinX = Vec3.crossXAxis(vec1, vec2);
+
+        // matrix[0] = cosZ;
+        // matrix[1] = -sinZ;
+
+        // matrix[4] = sinZ;
+        // matrix[5] = cosZ;
+        // matrix[6] = -sinX;
+        matrix[5] = cosX;
+        matrix[6] = -sinX;
+
+        matrix[9] = sinX;
+        matrix[10] = cosX;
+
+    }
+
+    /**
+     * Extract the scale from the given matrix
      * 
      * @param matrix
      * @param result
@@ -654,6 +700,44 @@ public abstract class Matrix extends VecMath {
         result[0] = (float) Math.sqrt(matrix[0] * matrix[0] + matrix[4] * matrix[4] + matrix[8] * matrix[8]);
         result[1] = (float) Math.sqrt(matrix[1] * matrix[1] + matrix[5] * matrix[5] + matrix[9] * matrix[9]);
         result[2] = (float) Math.sqrt(matrix[2] * matrix[2] + matrix[6] * matrix[6] + matrix[10] * matrix[10]);
+    }
+
+    /**
+     * Sets the given matrix to the rotation of the quaternion.
+     * 
+     * @param quaternion
+     * @param matrix
+     * @return The matrix with rotation set from quaternion, only rotation values changed.
+     */
+    public final static float[] setQuaternionRotation(float[] quaternion, float[] matrix) {
+        if (quaternion != null) {
+            float norm = quaternion[0] * quaternion[0] + quaternion[1] * quaternion[1] + quaternion[2] * quaternion[2]
+                    + quaternion[3] * quaternion[3];
+            float s = (norm == 1f) ? 2f : (norm > 0f) ? 2f / norm : 0;
+            float xs = quaternion[0] * s;
+            float ys = quaternion[1] * s;
+            float zs = quaternion[2] * s;
+            float xx = quaternion[0] * xs;
+            float xy = quaternion[0] * ys;
+            float xz = quaternion[0] * zs;
+            float xw = quaternion[3] * xs;
+            float yy = quaternion[1] * ys;
+            float yz = quaternion[1] * zs;
+            float yw = quaternion[3] * ys;
+            float zz = quaternion[2] * zs;
+            float zw = quaternion[3] * zs;
+
+            matrix[0] = 1 - (yy + zz);
+            matrix[1] = (xy - zw);
+            matrix[2] = (xz + yw);
+            matrix[4] = (xy + zw);
+            matrix[5] = 1 - (xx + zz);
+            matrix[6] = (yz - xw);
+            matrix[8] = (xz - yw);
+            matrix[9] = (yz + xw);
+            matrix[10] = 1 - (xx + yy);
+        }
+        return result;
     }
 
 }

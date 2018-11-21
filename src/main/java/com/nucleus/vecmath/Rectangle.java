@@ -1,7 +1,5 @@
 package com.nucleus.vecmath;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Definition of an axis aligned rectangle (quad) using a position plus width and height.
  * This class can be serialized using GSON
@@ -9,31 +7,18 @@ import com.google.gson.annotations.SerializedName;
  * @author Richard Sahlin
  *
  */
-public class Rectangle {
+public class Rectangle extends Shape {
 
     public static final String RECT = "rect";
-    public static final String VALUES = "values";
+    /**
+     * Number of values for a rectangle x,y + width, height
+     */
+    private static final int ELEMENTS = 4;
 
-    public final static int X = 0;
-    public final static int Y = 1;
-    public final static int WIDTH = 2;
-    public final static int HEIGHT = 3;
-
-    public enum Mode {
-        /**
-         * Defined using position + size,
-         */
-        SIZE(4);
-
-        int values;
-
-        Mode(int values) {
-            this.values = values;
-        }
-    }
-
-    @SerializedName(VALUES)
-    private float[] values;
+    public final static int INDEX_X = 0;
+    public final static int INDEX_Y = 1;
+    public final static int INDEX_WIDTH = 2;
+    public final static int INDEX_HEIGHT = 3;
 
     /**
      * Creates a new rectangle with position and size
@@ -44,33 +29,22 @@ public class Rectangle {
      * @param height
      */
     public Rectangle(float x, float y, float width, float height) {
-        values = new float[Mode.SIZE.values];
-        values[X] = x;
-        values[Y] = y;
-        values[WIDTH] = width;
-        values[HEIGHT] = height;
+        createValues();
+        values[INDEX_X] = x;
+        values[INDEX_Y] = y;
+        values[INDEX_WIDTH] = width;
+        values[INDEX_HEIGHT] = height;
 
-    }
-
-    /**
-     * Creates a new empty rectangle
-     * 
-     */
-    public Rectangle() {
-        values = new float[Mode.SIZE.values];
     }
 
     public Rectangle(Rectangle source) {
+        type = Type.rect;
         setValues(source.values);
     }
 
-    /**
-     * Returns the array where values can be read by indexing {@link #X}, {@link #Y}, {@link #WIDTH} and {@link #HEIGHT}
-     * 
-     * @return
-     */
-    public float[] getValues() {
-        return values;
+    @Override
+    public int getElementCount() {
+        return ELEMENTS;
     }
 
     /**
@@ -80,25 +54,25 @@ public class Rectangle {
      */
     public float[] getSize() {
         float[] size = new float[2];
-        size[0] = values[WIDTH];
-        size[1] = values[HEIGHT];
+        size[0] = values[INDEX_WIDTH];
+        size[1] = values[INDEX_HEIGHT];
         return size;
     }
 
     public float getWidth() {
-        return values[WIDTH];
+        return values[INDEX_WIDTH];
     }
 
     public float getHeight() {
-        return values[HEIGHT];
+        return values[INDEX_HEIGHT];
     }
 
     public float getX() {
-        return values[X];
+        return values[INDEX_X];
     }
 
     public float getY() {
-        return values[Y];
+        return values[INDEX_Y];
     }
 
     /**
@@ -107,10 +81,10 @@ public class Rectangle {
      * @param scale Scale factor
      */
     public void scale(float scale) {
-        values[X] *= scale;
-        values[Y] *= scale;
-        values[WIDTH] *= scale;
-        values[HEIGHT] *= scale;
+        values[INDEX_X] *= scale;
+        values[INDEX_Y] *= scale;
+        values[INDEX_WIDTH] *= scale;
+        values[INDEX_HEIGHT] *= scale;
     }
 
     /**
@@ -127,7 +101,8 @@ public class Rectangle {
 
     @Override
     public String toString() {
-        return "X:" + values[X] + " y:" + values[Y] + " width:" + values[WIDTH] + " height:" + values[HEIGHT];
+        return "X:" + values[INDEX_X] + " y:" + values[INDEX_Y] + " width:" + values[INDEX_WIDTH] + " height:"
+                + values[INDEX_HEIGHT];
     }
 
 }

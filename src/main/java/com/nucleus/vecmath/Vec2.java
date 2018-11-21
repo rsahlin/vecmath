@@ -6,13 +6,27 @@ package com.nucleus.vecmath;
  * float[] with an index.
  *
  */
-public final class Vector2D extends VecMath {
+public final class Vec2 extends VecMath {
 
     public final static int MAGNITUDE = 2;
     public final float[] vector = new float[3];
 
-    public Vector2D() {
+    public Vec2() {
 
+    }
+
+    /**
+     * Creates a 2D vector by normalizing the x and y values the length as the
+     * magnitude.
+     * 
+     * @param x
+     * @param y
+     */
+    public Vec2(float x, float y) {
+        float length = length(x, y);
+        vector[X] = x / length;
+        vector[Y] = y / length;
+        vector[MAGNITUDE] = length;
     }
 
     /**
@@ -21,7 +35,7 @@ public final class Vector2D extends VecMath {
      * @param p1
      * @param p2
      */
-    public Vector2D(float[] p1, float[] p2) {
+    public Vec2(float[] p1, float[] p2) {
         vector[X] = p2[X] - p1[X];
         vector[Y] = p2[Y] - p1[Y];
         vector[MAGNITUDE] = 1;
@@ -43,7 +57,7 @@ public final class Vector2D extends VecMath {
      * 
      * @param values
      */
-    public Vector2D(float[] values) {
+    public Vec2(float[] values) {
         float length = length(values[X], values[Y]);
         vector[X] = values[X] / length;
         vector[Y] = values[Y] / length;
@@ -67,7 +81,7 @@ public final class Vector2D extends VecMath {
      * @param vector2
      * @return The dot product of the 2 Vectors
      */
-    public final float dot(Vector2D vector2) {
+    public final float dot(Vec2 vector2) {
         return vector[X] * vector2.vector[X] + vector[Y] * vector2.vector[Y];
     }
 
@@ -205,4 +219,20 @@ public final class Vector2D extends VecMath {
         return (vector[X] * vector[MAGNITUDE]) / getLength();
     }
 
+    /**
+     * Creates a vector from pos1 to pos2 (subtracting pos2 from pos1) and storing the result in resultVec
+     * Result is not unit vector (not normalized)
+     * @param pos1 Start pos of vector
+     * @param index1
+     * @param pos2 End pos of vector
+     * @param index2
+     * @param resultVec pos2 - pos1
+     * @param resultIndex
+     */
+    public final static void toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec, int resultIndex) {
+        resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
+        resultVec[resultIndex] = pos2[index2] - pos1[index1];
+    }
+    
+    
 }

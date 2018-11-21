@@ -29,6 +29,8 @@ public final class Transform extends Matrix {
     @SerializedName(SCALE_LIMIT)
     private Limiter scaleLimit;
 
+    transient protected boolean matrixMode = false;
+
     /**
      * Default constructor
      */
@@ -97,21 +99,23 @@ public final class Transform extends Matrix {
      * 
      * @param add The values to add to the current translation
      */
-    public void addTranslation(float[] add) {
+    public void translate(float[] add) {
         translate[X] += add[X];
         translate[Y] += add[Y];
         translate[Z] += add[Z];
     }
 
     /**
-     * Adds the specified translation in x and y
+     * Adds the specified translation in x, y and z
      * 
      * @param x
      * @param y
+     * @param z
      */
-    public void translate(float x, float y) {
+    public void translate(float x, float y, float z) {
         translate[X] += x;
         translate[Y] += y;
+        translate[Z] += z;
     }
 
     /**
@@ -122,6 +126,17 @@ public final class Transform extends Matrix {
      */
     public float[] getScale() {
         return scale;
+    }
+
+    /**
+     * Reads the scale into result array.
+     * 
+     * @param result
+     */
+    public void getScale(float[] result) {
+        result[0] = scale[0];
+        result[1] = scale[1];
+        result[2] = scale[2];
     }
 
     /**
@@ -187,25 +202,58 @@ public final class Transform extends Matrix {
     }
 
     /**
-     * Sets the transform to the matrix, values are copied to the matrix in this class
-     * This matrix will only be used if axis angle, scale and translate fields are null - otherwise the matrix will be
-     * overwritten when {@link #getMatrix()} is called.
+     * Sets the transform to the matrix, values are copied to the matrix in this class.
      * 
-     * @param matrix ref to matrix or null to remove.
+     * @param matrix Matrix to set to this class
      */
     public void setMatrix(float[] matrix) {
         System.arraycopy(matrix, 0, this.matrix, 0, Matrix.MATRIX_ELEMENTS);
     }
 
-    @Override
+    /**
+     * Enables or disables matrix mode, if matrixMode is enabled then the {@link #updateMatrix()} method will return the
+     * existing matrix.
+     * 
+     * @param matrixMode True to enable matrix mode, false to disable.
+     */
+    public void setMatrixMode(boolean matrixMode) {
+        this.matrixMode = matrixMode;
+    }
+
+    /**
+     * Returns a reference to the matrix in this class.
+     * 
+     * @return
+     */
     public float[] getMatrix() {
-        if (axisAngle != null || scale != null || translate != null) {
+        return matrix;
+    }
+
+    /**
+     * If matrix mode is disabled the matrix is updated with transform using rotate, scale and translate values.
+     * 
+     * @return If matrix mode is enabled, returns the updated matrix with transform values, otherwise the matrix is
+     * returned.
+     */
+    public float[] updateMatrix() {
+        if (!matrixMode && (axisAngle != null || scale != null || translate != null)) {
             Matrix.setIdentity(matrix, 0);
             Matrix.rotateM(matrix, axisAngle);
             Matrix.scaleM(matrix, 0, scale);
             Matrix.translate(matrix, translate);
         }
         return matrix;
+
+    }
+
+    /**
+     * Returns true if this transform uses matrix mode, ie transform is not specified by rotate, scale and translate -
+     * instread the matrix is used.
+     * 
+     * @return True if this transform uses a matrix.
+     */
+    public boolean isMatrixMode() {
+        return matrixMode;
     }
 
 }
