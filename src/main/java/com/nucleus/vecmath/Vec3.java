@@ -174,6 +174,12 @@ public class Vec3 extends VecMath {
         return this;
     }
 
+    /**
+     * Normalizes the vector at index
+     * 
+     * @param values
+     * @param index
+     */
     public static final void normalize(float[] values, int index) {
         float len = (float) Math
                 .sqrt((values[index + X] * values[index + X])
@@ -183,8 +189,7 @@ public class Vec3 extends VecMath {
         values[index + Y] = values[index + Y] / len;
         values[index + Z] = values[index + Z] / len;
     }
-    
-    
+
     /**
      * Normalize 2D vector in the specified array, storing back the result.
      * 
@@ -262,6 +267,17 @@ public class Vec3 extends VecMath {
         return values[X] * vertex2[index++]
                 + values[Y] * vertex2[index++]
                 + values[Z] * vertex2[index++];
+    }
+
+    /**
+     * returns ax * bx + ay * by + az * bz
+     * 
+     * @param vec1 ax, ay, az
+     * @param vec2 bx, by, bz
+     * @return ax * bx + ay * by + az * bz
+     */
+    public static float dot(float[] vec1, int index1, float[] vec2, int index2) {
+        return vec1[index1++] * vec2[index2++] + vec1[index1++] * vec2[index2++] + vec1[index1] * vec2[index2];
     }
 
     /**
@@ -346,16 +362,22 @@ public class Vec3 extends VecMath {
 
     /**
      * Calculates the cross product of vec1 X vec2 and stores in result
+     * cx = ay * bz - az * by
+     * cy = az * bx - ax * bz
+     * cz = ax * by - ay * bx
      * 
      * @param vec1
+     * @param index1
      * @param vec2
+     * @param index2
      * @param result
+     * @param rIndex
      * @return The result array
      */
-    public static float[] cross(float[] vec1, float[] vec2, float[] result) {
-        result[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
-        result[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
-        result[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
+    public static float[] cross(float[] vec1, int index1, float[] vec2, int index2, float[] result, int rIndex) {
+        result[rIndex++] = vec1[1 + index1] * vec2[2 + index2] - vec1[2 + index1] * vec2[1 + index2];
+        result[rIndex++] = vec1[2 + index1] * vec2[0 + index2] - vec1[0 + index1] * vec2[2 + index2];
+        result[rIndex] = vec1[0 + index1] * vec2[1 + index2] - vec1[1 + index1] * vec2[0 + index2];
         return result;
     }
 
@@ -556,15 +578,17 @@ public class Vec3 extends VecMath {
     }
 
     /**
-     * Multiply the vector with a scalar
+     * Multiply the vector with a scalar - store result in vector and return
      * 
-     * @param float[] vector
+     * @param vector
      * @param scalar
+     * @return vector[] with vector * scalar
      */
-    public final static void mul(float[] vector, float scalar) {
+    public final static float[] mul(float[] vector, float scalar) {
         vector[0] = vector[0] * scalar;
         vector[1] = vector[1] * scalar;
         vector[2] = vector[2] * scalar;
+        return vector;
     }
 
     /**
@@ -660,13 +684,14 @@ public class Vec3 extends VecMath {
     }
 
     /**
-     * Subtract the vector s from m and store in r
+     * Subtract the vector s from m and store in r.
+     * r may be s or m.
      * 
      * @param m
      * @param mIndex
      * @param s
      * @param sIndex
-     * @param r
+     * @param r The result (m - s) is stored here
      * @param rIndex
      */
     public final static void subtract(float[] m, int mIndex, float[] s, int sIndex, float[] r, int rIndex) {
