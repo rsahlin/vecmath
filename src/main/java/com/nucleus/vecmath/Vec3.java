@@ -675,12 +675,13 @@ public class Vec3 extends VecMath {
      * @param data Array containing vector1 and vector2 and the destination
      * @param v1 index into array where vertex 1 is
      * @param v2 index into array where vertex 2 is
-     * @param dest index to result
+     * @param dest Destination array
+     * @param destIndex index to result
      */
-    public final static void cross3(float[] data, int v1, int v2, int dest) {
-        data[dest + X] = data[v1 + Y] * data[v2 + Z] - data[v1 + Z] * data[v2 + Y];
-        data[dest + Y] = data[v1 + Z] * data[v2 + X] - data[v1 + X] * data[v2 + Z];
-        data[dest + Z] = data[v1 + X] * data[v2 + Y] - data[v1 + Y] * data[v2 + X];
+    public final static void cross3(float[] data, int v1, int v2, float[] dest, int destIndex) {
+        dest[destIndex++] = data[v1 + Y] * data[v2 + Z] - data[v1 + Z] * data[v2 + Y];
+        dest[destIndex++] = data[v1 + Z] * data[v2 + X] - data[v1 + X] * data[v2 + Z];
+        dest[destIndex++] = data[v1 + X] * data[v2 + Y] - data[v1 + Y] * data[v2 + X];
     }
 
     /**
