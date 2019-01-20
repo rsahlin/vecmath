@@ -558,12 +558,14 @@ public class Vec3 extends VecMath {
      * @param v2Index
      * @param result
      * @param rIndex
+     * @preturn The result array
      */
-    public final static void add(float[] vector1, int v1Index, float[] vector2, int v2Index, float[] result,
+    public final static float[] add(float[] vector1, int v1Index, float[] vector2, int v2Index, float[] result,
             int rIndex) {
         result[rIndex++] = vector1[v1Index++] + vector2[v2Index++];
         result[rIndex++] = vector1[v1Index++] + vector2[v2Index++];
         result[rIndex] = vector1[v1Index] + vector2[v2Index];
+        return result;
     }
 
     /**
@@ -658,12 +660,14 @@ public class Vec3 extends VecMath {
      * @param index2
      * @param resultVec pos2 - pos1
      * @param resultIndex
+     * @return resultVec
      */
-    public final static void toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec,
+    public final static float[] toVector(float[] pos1, int index1, float[] pos2, int index2, float[] resultVec,
             int resultIndex) {
         resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
         resultVec[resultIndex++] = pos2[index2++] - pos1[index1++];
         resultVec[resultIndex] = pos2[index2] - pos1[index1];
+        return resultVec;
     }
 
     /**
@@ -677,11 +681,13 @@ public class Vec3 extends VecMath {
      * @param v2 index into array where vertex 2 is
      * @param dest Destination array
      * @param destIndex index to result
+     * @return The destination array
      */
-    public final static void cross3(float[] data, int v1, int v2, float[] dest, int destIndex) {
+    public final static float[] cross3(float[] data, int v1, int v2, float[] dest, int destIndex) {
         dest[destIndex++] = data[v1 + Y] * data[v2 + Z] - data[v1 + Z] * data[v2 + Y];
         dest[destIndex++] = data[v1 + Z] * data[v2 + X] - data[v1 + X] * data[v2 + Z];
         dest[destIndex++] = data[v1 + X] * data[v2 + Y] - data[v1 + Y] * data[v2 + X];
+        return dest;
     }
 
     /**
