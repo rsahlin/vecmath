@@ -155,7 +155,7 @@ public abstract class Matrix extends VecMath {
             resultVec[output++] = matrix[offset + 4] * vec[input] + matrix[offset + 5] * vec[input + 1]
                     + matrix[offset + 6] * vec[input + 2];
             resultVec[output++] = matrix[offset + 8] * vec[input] + matrix[offset + 9] * vec[input + 1]
-                    + matrix[offset + 10] * vec[input + 3];
+                    + matrix[offset + 10] * vec[input + 2];
             input += 3;
         }
     }
