@@ -164,7 +164,7 @@ public abstract class Matrix extends VecMath {
      * Transposes a 4 x 4 matrix.
      *
      * @param mTrans the array that holds the output inverted matrix
-     * @param mTransOffset an offset into mInv where the inverted matrix is
+     * @param mTransOffset an offset into mTrans where the inverted matrix is
      * stored.
      * @param m the input array
      * @param mOffset an offset into m where the matrix is stored.
