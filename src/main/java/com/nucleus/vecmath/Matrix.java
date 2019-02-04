@@ -143,7 +143,7 @@ public abstract class Matrix extends VecMath {
      * @param matrix
      * @param offset Offset in matrix array where matrix starts
      * @param vec
-     * @param resultVec The output vector, this may not be the same as vec
+     * @param resultVec The output vector, this shall not be the same as vec
      * @param count Number of vectors to transform
      */
     public final static void transformVec3(float[] matrix, int offset, float[] vec, float[] resultVec, int count) {
