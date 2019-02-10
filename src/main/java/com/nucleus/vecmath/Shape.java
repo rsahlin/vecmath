@@ -17,7 +17,11 @@ public abstract class Shape {
         /**
          * Two dimensional rectangle
          */
-        rect(Rectangle.class);
+        rect(Rectangle.class),
+        /**
+         * Two dimensional grid
+         */
+        grid(Grid.class);
 
         public final Class<?> typeClass;
 
