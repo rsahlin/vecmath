@@ -143,7 +143,7 @@ public abstract class Matrix extends VecMath {
      * @param matrix
      * @param offset Offset in matrix array where matrix starts
      * @param vec
-     * @param resultVec The output vector, this may not be the same as vec
+     * @param resultVec The output vector, this shall not be the same as vec
      * @param count Number of vectors to transform
      */
     public final static void transformVec3(float[] matrix, int offset, float[] vec, float[] resultVec, int count) {
@@ -155,7 +155,7 @@ public abstract class Matrix extends VecMath {
             resultVec[output++] = matrix[offset + 4] * vec[input] + matrix[offset + 5] * vec[input + 1]
                     + matrix[offset + 6] * vec[input + 2];
             resultVec[output++] = matrix[offset + 8] * vec[input] + matrix[offset + 9] * vec[input + 1]
-                    + matrix[offset + 10] * vec[input + 3];
+                    + matrix[offset + 10] * vec[input + 2];
             input += 3;
         }
     }
@@ -164,7 +164,7 @@ public abstract class Matrix extends VecMath {
      * Transposes a 4 x 4 matrix.
      *
      * @param mTrans the array that holds the output inverted matrix
-     * @param mTransOffset an offset into mInv where the inverted matrix is
+     * @param mTransOffset an offset into mTrans where the inverted matrix is
      * stored.
      * @param m the input array
      * @param mOffset an offset into m where the matrix is stored.
