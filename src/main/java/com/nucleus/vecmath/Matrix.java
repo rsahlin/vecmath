@@ -225,6 +225,32 @@ public abstract class Matrix extends VecMath {
     }
 
     /**
+     * Multiplies a vec4 with matrix
+     * 
+     * @param matrix
+     * @param vec4
+     * @param destVec4
+     */
+    public final static void mulVec4(float[] matrix, float[] vec4, float[] destVec4) {
+        destVec4[0] = vec4[0] * matrix[0] + vec4[1] * matrix[1] + vec4[2] * matrix[2] + vec4[3] * matrix[3];
+        destVec4[1] = vec4[0] * matrix[4] + vec4[1] * matrix[5] + vec4[2] * matrix[6] + vec4[7] * matrix[7];
+        destVec4[2] = vec4[0] * matrix[8] + vec4[1] * matrix[9] + vec4[2] * matrix[10] + vec4[11] * matrix[11];
+    }
+
+    /**
+     * Stores the XYZ translation from the matrix into the translate array at offset
+     * 
+     * @param
+     * @param translate
+     * @param offset
+     */
+    public final static void getTranslate(float[] matrix, float[] translate, int offset) {
+        translate[offset++] = matrix[3];
+        translate[offset++] = matrix[7];
+        translate[offset++] = matrix[11];
+    }
+
+    /**
      * Inverts a 4 x 4 matrix.
      *
      * @param mInv the array that holds the output inverted matrix
