@@ -31,6 +31,75 @@ public abstract class Matrix extends VecMath {
     private static float[] result = new float[16];
 
     /**
+     * Simple matrix stack implementation that copies float[] matrix to stack to preserve values.
+     * When values are pop'ed they are copied into the source matrix
+     * Can be used to preserve matrix hierarchy as nodes are traversed
+     *
+     */
+    public static class MatrixStack {
+
+        private final static int DEFAULT_CAPACITY = 100;
+
+        private float[] matrixStack;
+        private int capacity;
+        private int position = 0;
+
+        /**
+         * Creates a new matrix stack with room for 100 matrices
+         */
+        public MatrixStack() {
+            init(DEFAULT_CAPACITY);
+        }
+
+        /**
+         * Creates a matrix stack with the specified matrix capacity, a value of 100 means that 100 matrices
+         * can be pushed.
+         * 
+         * @param capacity Number of matrices to have storage for
+         */
+        public MatrixStack(int capacity) {
+            init(capacity);
+        }
+
+        private void init(int capacity) {
+            matrixStack = new float[MATRIX_ELEMENTS * capacity];
+            this.capacity = capacity;
+        }
+
+        /**
+         * Push a matrix on the stack
+         * 
+         * @param The matrix to push
+         */
+        public void push(float[] matrix, int index) {
+            if (position >= capacity * MATRIX_ELEMENTS) {
+                // Out of room on stack - double the size
+                float[] old = matrixStack;
+                int newCapacity = capacity * 2;
+                matrixStack = new float[newCapacity * MATRIX_ELEMENTS];
+                System.arraycopy(old, 0, matrixStack, 0, position);
+                capacity = newCapacity;
+            }
+            System.arraycopy(matrix, index, matrixStack, position, MATRIX_ELEMENTS);
+            position += MATRIX_ELEMENTS;
+        }
+
+        /**
+         * Pop a matrix from the stack
+         * 
+         */
+        public void pop(float[] matrix, int index) {
+            position -= MATRIX_ELEMENTS;
+            if (position >= 0) {
+                System.arraycopy(matrixStack, position, matrix, index, MATRIX_ELEMENTS);
+            } else {
+                throw new IllegalArgumentException("Empty stack");
+            }
+        }
+
+    }
+
+    /**
      * Creates a new, empty, matrix
      * 
      * @return
