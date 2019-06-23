@@ -835,4 +835,39 @@ public abstract class Matrix extends VecMath {
         return result;
     }
 
+    /**
+     * Creates a new perspective matrix
+     * 
+     * @return A new matrix with the perspective projection set
+     */
+    public static float[] createProjectionMatrix(float aspectRatio, float yfov, float zfar, float znear) {
+        float[] projection = Matrix.setIdentity(Matrix.createMatrix(), 0);
+        if (zfar == -1) {
+            return calculateMatrixInfinite(projection, aspectRatio, yfov, zfar, znear);
+        }
+        return calculateMatrixFinite(projection, aspectRatio, yfov, zfar, znear);
+    }
+
+    protected static float[] calculateMatrixInfinite(float[] projection, float aspectRatio, float yfov, float zfar,
+            float znear) {
+        projection[0] = (float) (1 / (aspectRatio * Math.tan((0.5f * yfov))));
+        projection[5] = (float) (1 / (Math.tan(0.5f * yfov)));
+        projection[10] = -1f;
+        projection[11] = -2 * znear;
+        projection[14] = -1f;
+        projection[15] = 0;
+        return projection;
+    }
+
+    protected static float[] calculateMatrixFinite(float[] projection, float aspectRatio, float yfov, float zfar,
+            float znear) {
+        projection[0] = (float) (1 / (aspectRatio * Math.tan((0.5f * yfov))));
+        projection[5] = (float) (1 / (Math.tan(0.5f * yfov)));
+        projection[10] = (zfar + znear) / (znear - zfar);
+        projection[11] = (2 * zfar * znear) / (znear - zfar);
+        projection[14] = -1f;
+        projection[15] = 0;
+        return projection;
+    }
+
 }
